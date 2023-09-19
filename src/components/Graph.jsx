@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToSelectedNodes, removeAllSelectedNodes, removeToSelectedNodes } from '../redux/viewSlice';
+import { addToSelectedNodes, removeAllSelectedNodes, removeToSelectedNodes, setCurrentView } from '../redux/viewSlice';
 import { deepCompare } from '../utils/graphUtils';
 
 const Graph = () => {
@@ -12,6 +12,10 @@ const Graph = () => {
     
 
     const handleNodeClick = (node, nodeIsSelected) => {
+        console.log(viewState.currentView)
+        if(viewState.currentView !== 'selectView'){
+            dispatch(setCurrentView('selectView'))
+        }
         if(!nodeIsSelected) {
             dispatch(addToSelectedNodes(node))
         } else {
@@ -56,7 +60,7 @@ const Graph = () => {
         // console.log(deepCompare(graphState.adjacencyList, graphState.originalAdjacencyList))
         // console.log(graphState.originalAdjacencyList)
         // console.log(graphState.adjacencyList)
-    }, [graphState.shortestPath, viewState.selectedNodes, graphState.nodeOccupancy, graphState.adjacencyList])
+    }, [graphState.shortestPath, viewState.selectedNodes, graphState.nodeOccupancy, graphState.adjacencyList, viewState.currentView])
 
 
     return (
