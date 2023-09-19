@@ -1,17 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
-import { createAdjacencyList } from './utils/graphUtils';
+import { createAdjacencyList, dijkstra, findShortestPath } from './utils/graphUtils';
 import Graph from './components/Graph';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAdjacencyList } from './redux/graphSlice';
+import { setAdjacencyList, setShortestPath } from './redux/graphSlice';
 import { useEffect } from 'react';
 function App() {
   const dispatch = useDispatch()
   const graphState = useSelector(state => state.graph)
   
   useEffect(() => {
-    const adjacencyList = createAdjacencyList(10)
+    const adjacencyList = createAdjacencyList(15)
+    const data = dijkstra(adjacencyList, "0-0")
+    const shortestPath = findShortestPath(data.distances, data.previous, "0-0","0-1")
     dispatch(setAdjacencyList(adjacencyList))
+    dispatch(setShortestPath(shortestPath))
 
   }, [])
 
