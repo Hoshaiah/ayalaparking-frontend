@@ -35,7 +35,7 @@ const Graph = (props) => {
 
 
     return (
-        <div className="flex flex-row border-black border w-fit text-xs">
+        <div className="flex flex-row border-black border w-fit h-fit text-xs">
             {rows}
         </div>
     );

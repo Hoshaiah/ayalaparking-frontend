@@ -25,7 +25,12 @@ function App() {
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-3xl font-bold text-blue-400">Hellow orld</h1>
-      <Graph adjacencyList={graphState.adjacencyList}/>
+      <div className="flex flex-row w-full h-full">
+        <div className="h-[calc(100vh-36px)] w-1/3 bg-slate-400"> </div>
+        <div className="h-[calc(100vh-36px)] w-full bg-slate-100 flex justify-center pt-20 ">
+          <Graph adjacencyList={graphState.adjacencyList}/>
+        </div>
+      </div>
     </div>
   );
 }
