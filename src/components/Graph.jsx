@@ -43,11 +43,11 @@ const Graph = () => {
                             const [row, col] = node.split('-');
                             const nodeInShortestPath = shortestPath.has(node)
                             const nodeIsSelected = selectedNodes.has(node)
-                            const nodeIsOccupied = nodeOccupancy[node] === 'occupied'
+                            const nodeIsBlocked = nodeOccupancy[node] && nodeOccupancy[node].parking === 'block' 
                             return (
                                 <button onClick={() => {handleNodeClick(node, nodeIsSelected)}} key={node} className={`border-black border w-8 h-8 flex items-center justify-center 
                                 ${nodeInShortestPath && viewState.currentView === 'shortestPath' ? 'bg-yellow-300' : ''}
-                                ${nodeIsOccupied ? 'bg-black': ''}
+                                ${nodeIsBlocked ? 'bg-black': ''}
                                 ${viewState.currentView === "selectView" && nodeIsSelected ? 'border-2 border-yellow-400': ''}
                                 `} >
                                     {node}

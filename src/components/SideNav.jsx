@@ -11,7 +11,7 @@ const SideNav = () => {
     const handleBlockClick = () => {
         dispatch(setNodeOccupancy({
             nodes: viewState.selectedNodes,
-            action: 'remove',
+            action: 'block',
         }))
         const updatedAdjacencyList = removeNodes(graph.adjacencyList, viewState.selectedNodes)
         dispatch(setAdjacencyList(updatedAdjacencyList))

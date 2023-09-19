@@ -31,9 +31,12 @@ const graphSlice = createSlice({
         const updatedNodeOccupancy = {
           ...state.nodeOccupancy,
         }
-        if(action.payload.action === 'remove') {
+        if(action.payload.action === 'block') {
             action.payload.nodes.forEach(node => {
-                updatedNodeOccupancy[node] = 'occupied'
+                updatedNodeOccupancy[node] = {
+                    parking: 'block',
+                    parkedCar: 'block'
+                } 
             });
         } else if(action.payload.action === 'reset') {
             action.payload.nodes.forEach(node => {
