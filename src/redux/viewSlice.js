@@ -18,9 +18,12 @@ const viewSlice = createSlice({
     },
     removeToSelectedNodes: (state, action) => {
         state.selectedNodes = state.selectedNodes.filter(item => item !== action.payload);
-      },
+    },
+    removeAllSelectedNodes: (state, action) => {
+        state.selectedNodes = []
+    },
   },
 });
 
-export const { setCurrentView, addToSelectedNodes, removeToSelectedNodes} = viewSlice.actions;
+export const { setCurrentView, addToSelectedNodes, removeToSelectedNodes, removeAllSelectedNodes} = viewSlice.actions;
 export default viewSlice.reducer;

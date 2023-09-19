@@ -86,7 +86,7 @@ export const removeNodes = (adjacencyList, nodesToRemove) => {
 
     nodesToRemove.forEach(nodeToRemove => {
         // Step 1: Remove the node
-        delete updatedAdjacencyList[nodeToRemove];
+        // delete updatedAdjacencyList[nodeToRemove];
 
         // Step 2: Remove references from top, bottom, left, right neighbors
         const [row, col] = nodeToRemove.split('-');
@@ -105,4 +105,86 @@ export const removeNodes = (adjacencyList, nodesToRemove) => {
     });
 
     return updatedAdjacencyList;
+}
+
+export const addNodes = (adjacencyList, nodesToAdd) => {
+    let updatedAdjacencyList = { ...adjacencyList };
+
+    nodesToAdd.forEach(nodeToAdd => {
+        const [row, col] = nodeToAdd.split('-');
+
+        // Step 1: Add the node back
+        // updatedAdjacencyList[nodeToAdd] = [];
+
+        // Step 2: Reconnect with top, bottom, left, right neighbors
+        const neighbors = [
+            `${parseInt(row, 10) + 1}-${col}`, // Bottom neighbor
+            `${parseInt(row, 10) - 1}-${col}`, // Top neighbor
+            `${row}-${parseInt(col, 10) + 1}`, // Right neighbor
+            `${row}-${parseInt(col, 10) - 1}`  // Left neighbor
+        ];
+
+        neighbors.forEach(neighbor => {
+            if (updatedAdjacencyList[neighbor]) {
+                if (!updatedAdjacencyList[neighbor].includes(nodeToAdd))
+                updatedAdjacencyList[neighbor] = [
+                    ...updatedAdjacencyList[neighbor],
+                    nodeToAdd
+                ]
+            }
+        });
+    });
+
+    return updatedAdjacencyList;
+};
+
+export const deepCompare = (obj1, obj2, path = '') => {
+    // Check if both inputs are arrays
+    if (Array.isArray(obj1) && Array.isArray(obj2)) {
+        // Sort the arrays to ignore order
+        const sortedObj1 = [...obj1].sort();
+        const sortedObj2 = [...obj2].sort();
+
+        if (JSON.stringify(sortedObj1) !== JSON.stringify(sortedObj2)) {
+            return { [path]: { obj1, obj2 } };
+        }
+
+        return {};
+    }
+
+    // Check if both inputs are objects
+    if (typeof obj1 === 'object' && typeof obj2 === 'object') {
+        const keys1 = Object.keys(obj1);
+        const keys2 = Object.keys(obj2);
+
+        const differences = {};
+
+        for (const key of keys1) {
+            const newPath = path ? `${path}.${key}` : key;
+            if (!keys2.includes(key)) {
+                differences[newPath] = { obj1: obj1[key], obj2: undefined };
+            } else {
+                const nestedDifferences = deepCompare(obj1[key], obj2[key], newPath);
+                if (Object.keys(nestedDifferences).length > 0) {
+                    Object.assign(differences, nestedDifferences);
+                }
+            }
+        }
+
+        for (const key of keys2) {
+            if (!keys1.includes(key)) {
+                const newPath = path ? `${path}.${key}` : key;
+                differences[newPath] = { obj1: undefined, obj2: obj2[key] };
+            }
+        }
+
+        return differences;
+    }
+
+    // If not objects or arrays, compare values directly
+    if (obj1 !== obj2) {
+        return { [path]: { obj1, obj2 } };
+    }
+
+    return {};
 }

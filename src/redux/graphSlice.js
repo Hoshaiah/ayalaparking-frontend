@@ -9,6 +9,7 @@ const graphSlice = createSlice({
     distances: {},
     previous: {},
     shortestPath: [],
+    nodeOccupancy: {}
   },
   reducers: {
     setOriginalAdjacencyList: (state, action) => {
@@ -26,8 +27,23 @@ const graphSlice = createSlice({
     setShortestPath: (state, action) => {
       state.shortestPath = action.payload
     },
+    setNodeOccupancy: (state, action) => {
+        const updatedNodeOccupancy = {
+          ...state.nodeOccupancy,
+        }
+        if(action.payload.action === 'remove') {
+            action.payload.nodes.forEach(node => {
+                updatedNodeOccupancy[node] = 'occupied'
+            });
+        } else if(action.payload.action === 'reset') {
+            action.payload.nodes.forEach(node => {
+                delete updatedNodeOccupancy[node]
+            })
+        }
+        state.nodeOccupancy = updatedNodeOccupancy
+    },
   },
 });
 
-export const { setOriginalAdjacencyList, setAdjacencyList, setDistances, setPrevious, setShortestPath} = graphSlice.actions;
+export const { setOriginalAdjacencyList, setAdjacencyList, setDistances, setPrevious, setShortestPath, setNodeOccupancy} = graphSlice.actions;
 export default graphSlice.reducer;

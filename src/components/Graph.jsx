@@ -1,10 +1,10 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToSelectedNodes, removeToSelectedNodes } from '../redux/viewSlice';
+import { addToSelectedNodes, removeAllSelectedNodes, removeToSelectedNodes } from '../redux/viewSlice';
+import { deepCompare } from '../utils/graphUtils';
 
-const Graph = (props) => {
-    const {adjacencyList} = props
+const Graph = () => {
     const dispatch = useDispatch()
     const graphState= useSelector(state => state.graph)
     const viewState = useSelector(state => state.view)
@@ -23,6 +23,8 @@ const Graph = (props) => {
     useEffect(() => {
         const shortestPath = new Set(graphState.shortestPath)
         const selectedNodes = new Set(viewState.selectedNodes)
+        const nodeOccupancy = graphState.nodeOccupancy
+        const adjacencyList = graphState.adjacencyList
         const gridSize = Math.sqrt(Object.keys(adjacencyList).length);
         const rowToSet = Array.from({ length: gridSize }, (_, rowIndex) => {
             const nodesInRow = Object.keys(adjacencyList).filter(node => {
@@ -36,10 +38,12 @@ const Graph = (props) => {
                         const [row, col] = node.split('-');
                         const nodeInShortestPath = shortestPath.has(node)
                         const nodeIsSelected = selectedNodes.has(node)
+                        const nodeIsOccupied = nodeOccupancy[node] === 'occupied'
                         return (
                             <button onClick={() => {handleNodeClick(node, nodeIsSelected)}} key={node} className={`border-black border w-8 h-8 flex items-center justify-center 
                             ${nodeInShortestPath && viewState.currentView === 'shortestPath' ? 'bg-yellow-300' : ''}
-                            ${viewState.currentView === "selectView" && nodeIsSelected ? 'bg-blue-400': ''}
+                            ${nodeIsOccupied ? 'bg-black': ''}
+                            ${viewState.currentView === "selectView" && nodeIsSelected ? 'border-2 border-yellow-400': ''}
                             `} >
                                 {node}
                             </button>
@@ -49,7 +53,10 @@ const Graph = (props) => {
             );
         });
         setRows(rowToSet)
-    }, [graphState.shortestPath, viewState.selectedNodes])
+        // console.log(deepCompare(graphState.adjacencyList, graphState.originalAdjacencyList))
+        // console.log(graphState.originalAdjacencyList)
+        // console.log(graphState.adjacencyList)
+    }, [graphState.shortestPath, viewState.selectedNodes, graphState.nodeOccupancy, graphState.adjacencyList])
 
 
     return (
