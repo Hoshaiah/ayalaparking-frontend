@@ -131,7 +131,6 @@ export const resetNodes = (adjacencyList, nodesToAdd, nodeOccupancy) => {
         })
         
         // Step 2: Reconnect top, bottom, left, right neighbors to node
-        console.log(runningNodeOccupancy)
         neighbors.forEach(neighbor => {
             if (updatedAdjacencyList[neighbor]) {
                 const nodeIsNotBlockedOrParking = !runningNodeOccupancy[neighbor] || !runningNodeOccupancy[neighbor].parking
@@ -183,6 +182,20 @@ export const turnNodestoEntrance= (adjacencyList, nodesToDisconnect, nodeOccupan
         });
     })
     return updatedAdjacencyList;
+}
+
+export const countNumberOfEntrances = (nodes, occupancy) => {
+    let count = 0;
+    let nodeKeys = [...nodes]
+    if(nodes.length === 0) {
+        nodeKeys = Object.keys(occupancy)
+    }
+    nodeKeys.forEach(node => {
+        if (occupancy[node] && occupancy[node].entrance === true) {
+            count++;
+        }
+    });
+    return count;
 }
 
 export const deepCompare = (obj1, obj2, path = '') => {

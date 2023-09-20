@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
-import { resetNodes, deepCompare, dijkstra, turnNodesToParking, findShortestPath, blockNodes, turnNodestoEntrance } from "../utils/graphUtils";
+import { resetNodes, deepCompare, dijkstra, turnNodesToParking, findShortestPath, blockNodes, turnNodestoEntrance, countNumberOfEntrances } from "../utils/graphUtils";
 import { setAdjacencyList, setNodeOccupancy, setShortestPath } from "../redux/graphSlice";
 import { removeAllSelectedNodes, setCurrentView } from "../redux/viewSlice";
 import { useEffect, useState } from "react";
-import { isDisabled } from "@testing-library/user-event/dist/utils";
 
 const SideNav = () => {
     const dispatch = useDispatch()
     const viewState = useSelector(state => state.view)
     const graph = useSelector(state => state.graph)
-    const [entranceDisabled, setEntranceDisabled] = useState(true)
+    const [entranceDisabled, setEntranceDisabled] = useState(false)
+    const [parkingDisabled, setParkingDisabled] = useState(false)
 
     const handleBlockClick = () => {
         dispatch(setNodeOccupancy({
@@ -60,6 +60,7 @@ const SideNav = () => {
 
 
     useEffect(() => { 
+        // Disable entrance button if there is at least one non-edge node selected
         const hasNoneEdgeNode = (nodes = [], n) => {
             for (let item of nodes) {
                 let [x, y] = item.split('-').map(Number);
@@ -72,10 +73,20 @@ const SideNav = () => {
         setEntranceDisabled(hasNoneEdgeNode(viewState.selectedNodes, graph.grapSize - 1))
     }, [viewState.selectedNodes])
 
+    useEffect(() => {
+        const numberOfEntrances = countNumberOfEntrances([], graph.nodeOccupancy)
+        const numberOfEntrancesSelected = countNumberOfEntrances(viewState.selectedNodes, graph.nodeOccupancy)
+        if (numberOfEntrances - numberOfEntrancesSelected < 3 && viewState.selectedNodes.length > 0 ) {
+            setParkingDisabled(true)
+        }  else {
+            setParkingDisabled(false)
+        }
+    },[viewState.selectedNodes, graph.nodeOccupancy])
+
     return (
         <div className="h-[calc(100vh-36px)] w-1/3 bg-blue-200">
-            <button className="bg-slate-600 text-white p-1 rounded-sm" onClick={handleBlockClick}>Block</button>
-            <button className="bg-slate-100 text-black p-1 rounded-sm" onClick={handleResetClick}>Reset</button>
+            <button className={`${parkingDisabled ? 'bg-gray-400': 'bg-slate-600'} text-white p-1 rounded-sm`} onClick={handleBlockClick} disabled={parkingDisabled}>Block</button>
+            <button className="bg-slate-100 text-black p-1 rounded-sm" onClick={handleResetClick} >Reset</button>
             <button className="bg-red-200 text-black p-1 rounded-sm" onClick={() => handleParkingClick('small')}>Small Parking</button>
             <button className="bg-green-500 text-black p-1 rounded-sm" onClick={() => handleParkingClick('medium')}>Medium Parking</button>
             <button className="bg-blue-700 text-white p-1 rounded-sm" onClick={() => handleParkingClick('large')}>Large Parking</button>

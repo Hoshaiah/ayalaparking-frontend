@@ -12,7 +12,6 @@ const Graph = () => {
     
 
     const handleNodeClick = (node, nodeIsSelected) => {
-        console.log(viewState.currentView)
         if(viewState.currentView !== 'selectView'){
             dispatch(setCurrentView('selectView'))
         }
@@ -83,9 +82,9 @@ const Graph = () => {
                 );
             });
             setRows(rowToSet)
-            console.log(deepCompare(graphState.originalAdjacencyList, graphState.adjacencyList))
-            console.log(graphState.originalAdjacencyList)
-            console.log(graphState.adjacencyList)
+            // console.log(deepCompare(graphState.originalAdjacencyList, graphState.adjacencyList))
+            // console.log(graphState.originalAdjacencyList)
+            // console.log(graphState.adjacencyList)
         }
         mapNodes()
     }, [graphState.shortestPath, viewState.selectedNodes, graphState.nodeOccupancy, graphState.adjacencyList, viewState.currentView])
