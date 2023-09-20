@@ -148,7 +148,7 @@ export const resetNodes = (adjacencyList, nodesToAdd, nodeOccupancy) => {
     return {updatedAdjacencyList, runningNodeOccupancy};
 };
 
-export const disconnectNodeToOutgoing = (adjacencyList, nodesToDisconnect, nodeOccupancy) => {
+export const turnNodesToParking = (adjacencyList, nodesToDisconnect, nodeOccupancy) => {
     let updatedAdjacencyList = {...adjacencyList} 
     let runningNodeOccupancy = {...nodeOccupancy}
     updatedAdjacencyList = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).updatedAdjacencyList

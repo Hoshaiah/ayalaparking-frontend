@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { resetNodes, deepCompare, dijkstra, disconnectNodeToOutgoing, findShortestPath, removeNodes } from "../utils/graphUtils";
+import { resetNodes, deepCompare, dijkstra, turnNodesToParking, findShortestPath, removeNodes } from "../utils/graphUtils";
 import { setAdjacencyList, setNodeOccupancy, setShortestPath } from "../redux/graphSlice";
 import { removeAllSelectedNodes, setCurrentView } from "../redux/viewSlice";
 
@@ -40,7 +40,7 @@ const SideNav = () => {
             action: 'parking',
             parking: parking
         }))
-        const updatedAdjacencyList = disconnectNodeToOutgoing(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy)
+        const updatedAdjacencyList = turnNodesToParking(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy)
         dispatch(setAdjacencyList(updatedAdjacencyList))
         dispatch(removeAllSelectedNodes())
     }
