@@ -11,7 +11,7 @@ const ParkView = () => {
         const data = dijkstra(graph.adjacencyList, "0-0")
         const shortestPath = findShortestPath(data.distances, data.previous, "0-0","14-14")
         dispatch(setShortestPath(shortestPath))
-        dispatch(setCurrentView('shortestPath'))
+        dispatch(setCurrentView('parkView'))
     }
 
     return (

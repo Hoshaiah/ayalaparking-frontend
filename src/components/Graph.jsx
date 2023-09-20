@@ -12,8 +12,8 @@ const Graph = () => {
     
 
     const handleNodeClick = (node, nodeIsSelected) => {
-        if(viewState.currentView !== 'selectView'){
-            dispatch(setCurrentView('selectView'))
+        if(viewState.currentView !== 'editView'){
+            dispatch(setCurrentView('editView'))
         }
         if(!nodeIsSelected) {
             dispatch(addToSelectedNodes(node))
@@ -70,9 +70,9 @@ const Graph = () => {
                             const nodeParkingColor = determineNodeParkingColor(nodeOccupancy, node) 
                             return (
                                 <button onClick={() => {handleNodeClick(node, nodeIsSelected)}} key={node} className={`border-black border w-8 h-8 flex items-center justify-center 
-                                ${nodeInShortestPath && viewState.currentView === 'shortestPath' ? 'bg-yellow-300' : ''}
+                                ${nodeInShortestPath && viewState.currentView === 'parkView' ? 'bg-yellow-300' : ''}
                                 ${nodeParkingColor}
-                                ${viewState.currentView === "selectView" && nodeIsSelected ? 'border-2 border-yellow-400': ''}
+                                ${viewState.currentView === "editView" && nodeIsSelected ? 'border-2 border-yellow-400': ''}
                                 `} >
                                     {node}
                                 </button>

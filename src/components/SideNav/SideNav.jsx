@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import EditView from "./EditView";
 import ParkView from "./ParkView";
+import { setCurrentView } from "../../redux/viewSlice";
 
 const SideNav = () => {
     const dispatch = useDispatch()
@@ -8,8 +9,39 @@ const SideNav = () => {
     const graph = useSelector(state => state.graph)
 
 
+    const handleEditClick = () => {
+        dispatch(setCurrentView('editView'))
+    }
+
+    const handleParkClick = () => {
+        dispatch(setCurrentView('parkView'))
+    }
+    
+    const handleUnparkClick = () => {
+        dispatch(setCurrentView('unparkView'))
+    }
+
     return (
-        <div className="h-[calc(100vh-36px)] w-1/3 bg-blue-200">
+        <div className="h-[calc(100vh-36px)] w-1/3 bg-slate-300">
+            <div className="flex bg-white">
+                <button 
+                    className={`w-1/3 p-2 flex items-center justify-center rounded-t-xl border-r border-t
+                        ${viewState.currentView === 'editView' ? 'bg-blue-900 text-white': 'bg-white'}`}
+                    onClick={handleEditClick}
+                >Edit</button>
+
+                <button
+                    className={`w-1/3 p-2 flex items-center justify-center rounded-t-xl border-r border-t
+                        ${viewState.currentView === 'parkView' ? 'bg-blue-900 text-white': 'bg-white'}`}
+                    onClick={handleParkClick}
+                >Park</button>
+
+                <button 
+                    className={`w-1/3 p-2 flex items-center justify-center rounded-t-xl border-r border-t
+                        ${viewState.currentView === 'unparkView' ? 'bg-blue-900 text-white': 'bg-white'}`}
+                    onClick={handleUnparkClick}
+                >UnPark</button>
+            </div>
             <EditView/>
             <ParkView/>
         </div>
