@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import EditView from "./EditView";
 import ParkView from "./ParkView";
 import { setCurrentView } from "../../redux/viewSlice";
+import UnparkView from "./UnparkView";
 
 const SideNav = () => {
     const dispatch = useDispatch()
@@ -42,8 +43,9 @@ const SideNav = () => {
                     onClick={handleUnparkClick}
                 >UnPark</button>
             </div>
-            <EditView/>
-            <ParkView/>
+            {viewState.currentView ==='editView' && <EditView/>}
+            {viewState.currentView ==='parkView' && <ParkView/>}
+            {viewState.currentView ==='unparkView' && <UnparkView/>}
         </div>
     )
 }
