@@ -145,11 +145,15 @@ export const resetNodes = (adjacencyList, nodesToAdd, nodeOccupancy) => {
         delete runningNodeOccupancy[nodeToAdd]
     });
 
-    return updatedAdjacencyList;
+    return {updatedAdjacencyList, runningNodeOccupancy};
 };
 
-export const disconnectNodeToOutgoing = (adjacencyList, nodesToDisconnect) => {
+export const disconnectNodeToOutgoing = (adjacencyList, nodesToDisconnect, nodeOccupancy) => {
     let updatedAdjacencyList = {...adjacencyList} 
+    let runningNodeOccupancy = {...nodeOccupancy}
+    updatedAdjacencyList = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).updatedAdjacencyList
+    runningNodeOccupancy = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).runningNodeOccupancy
+
     nodesToDisconnect.forEach(nodeToDisconnect => {
         updatedAdjacencyList[nodeToDisconnect] = []
     })

@@ -22,7 +22,7 @@ const SideNav = () => {
             nodes: viewState.selectedNodes,
             action: 'reset',
         }))
-        const updatedAdjacencyList = resetNodes(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy)
+        const updatedAdjacencyList = resetNodes(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy).updatedAdjacencyList
         dispatch(setAdjacencyList(updatedAdjacencyList))
         dispatch(removeAllSelectedNodes())
     }
@@ -40,7 +40,7 @@ const SideNav = () => {
             action: 'parking',
             parking: parking
         }))
-        const updatedAdjacencyList = disconnectNodeToOutgoing(graph.adjacencyList, viewState.selectedNodes)
+        const updatedAdjacencyList = disconnectNodeToOutgoing(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy)
         dispatch(setAdjacencyList(updatedAdjacencyList))
         dispatch(removeAllSelectedNodes())
     }
