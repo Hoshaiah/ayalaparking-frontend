@@ -2,11 +2,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetNodes, deepCompare, dijkstra, turnNodesToParking, findShortestPath, blockNodes, turnNodestoEntrance } from "../utils/graphUtils";
 import { setAdjacencyList, setNodeOccupancy, setShortestPath } from "../redux/graphSlice";
 import { removeAllSelectedNodes, setCurrentView } from "../redux/viewSlice";
+import { useEffect, useState } from "react";
+import { isDisabled } from "@testing-library/user-event/dist/utils";
 
 const SideNav = () => {
     const dispatch = useDispatch()
     const viewState = useSelector(state => state.view)
     const graph = useSelector(state => state.graph)
+    const [entranceDisabled, setEntranceDisabled] = useState(true)
 
     const handleBlockClick = () => {
         dispatch(setNodeOccupancy({
@@ -55,6 +58,20 @@ const SideNav = () => {
         dispatch(removeAllSelectedNodes())
     }
 
+
+    useEffect(() => { 
+        const hasNoneEdgeNode = (nodes = [], n) => {
+            for (let item of nodes) {
+                let [x, y] = item.split('-').map(Number);
+                if (x !== 0 && x !== 14 && y !== 0 && y !== 14) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        setEntranceDisabled(hasNoneEdgeNode(viewState.selectedNodes, graph.grapSize - 1))
+    }, [viewState.selectedNodes])
+
     return (
         <div className="h-[calc(100vh-36px)] w-1/3 bg-blue-200">
             <button className="bg-slate-600 text-white p-1 rounded-sm" onClick={handleBlockClick}>Block</button>
@@ -62,7 +79,7 @@ const SideNav = () => {
             <button className="bg-red-200 text-black p-1 rounded-sm" onClick={() => handleParkingClick('small')}>Small Parking</button>
             <button className="bg-green-500 text-black p-1 rounded-sm" onClick={() => handleParkingClick('medium')}>Medium Parking</button>
             <button className="bg-blue-700 text-white p-1 rounded-sm" onClick={() => handleParkingClick('large')}>Large Parking</button>
-            <button className="bg-orange-500 text-white p-1 rounded-sm" onClick={() => handleEntranceClick()}>Entrance</button>
+            <button className={`${entranceDisabled ? 'bg-gray-400': 'bg-orange-500'} text-white p-1 rounded-sm`} onClick={() => handleEntranceClick()} disabled={entranceDisabled}>Entrance</button>
             <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleFindShortestPath}>Find Shortest Path</button>
         </div>
     )

@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const graphSlice = createSlice({
   name: "graph",
   initialState: {
+    graphSize: 0,
     originalAdjacencyList: {},
     adjacencyList: {},
     distances: {},
@@ -12,6 +13,9 @@ const graphSlice = createSlice({
     nodeOccupancy: {}
   },
   reducers: {
+    setGraphSize: (state, action) => {
+        state.graphSize = action.payload
+    },
     setOriginalAdjacencyList: (state, action) => {
       state.originalAdjacencyList = action.payload
     },
@@ -61,5 +65,5 @@ const graphSlice = createSlice({
   },
 });
 
-export const { setOriginalAdjacencyList, setAdjacencyList, setDistances, setPrevious, setShortestPath, setNodeOccupancy} = graphSlice.actions;
+export const { setOriginalAdjacencyList, setAdjacencyList, setDistances, setPrevious, setShortestPath, setNodeOccupancy, setGraphSize} = graphSlice.actions;
 export default graphSlice.reducer;

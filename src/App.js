@@ -3,7 +3,7 @@ import './App.css';
 import { createAdjacencyList, dijkstra, findShortestPath, blockNodes } from './utils/graphUtils';
 import Graph from './components/Graph';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAdjacencyList, setOriginalAdjacencyList, setShortestPath } from './redux/graphSlice';
+import { setAdjacencyList, setGraphSize, setOriginalAdjacencyList, setShortestPath } from './redux/graphSlice';
 import { useEffect } from 'react';
 import SideNav from './components/SideNav';
 function App() {
@@ -11,7 +11,9 @@ function App() {
   const graphState = useSelector(state => state.graph)
   
   useEffect(() => {
-    const adjacencyList = createAdjacencyList(15)
+    const sizeOfGraph = 15
+    const adjacencyList = createAdjacencyList(sizeOfGraph)
+    dispatch(setGraphSize(sizeOfGraph))
     // const updatedAdjacencyList = blockNodes(adjacencyList, ["3-1","4-1","4-0","14-1","13-0"])
     // const data = dijkstra(updatedAdjacencyList, "0-0")
     // const shortestPath = findShortestPath(data.distances, data.previous, "0-0","12-0")
