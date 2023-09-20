@@ -130,7 +130,8 @@ export const resetNodes = (adjacencyList, nodesToAdd, nodeOccupancy) => {
             }
         })
         
-        // Step 2: Reconnect with top, bottom, left, right neighbors to node
+        // Step 2: Reconnect top, bottom, left, right neighbors to node
+        console.log(runningNodeOccupancy)
         neighbors.forEach(neighbor => {
             if (updatedAdjacencyList[neighbor]) {
                 const nodeIsNotBlockedOrParking = !runningNodeOccupancy[neighbor] || !runningNodeOccupancy[neighbor].parking
@@ -156,6 +157,30 @@ export const turnNodesToParking = (adjacencyList, nodesToDisconnect, nodeOccupan
 
     nodesToDisconnect.forEach(nodeToDisconnect => {
         updatedAdjacencyList[nodeToDisconnect] = []
+    })
+    return updatedAdjacencyList;
+}
+
+export const turnNodestoEntrance= (adjacencyList, nodesToDisconnect, nodeOccupancy) => {
+    let updatedAdjacencyList = {...adjacencyList} 
+    let runningNodeOccupancy = {...nodeOccupancy}
+    updatedAdjacencyList = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).updatedAdjacencyList
+    runningNodeOccupancy = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).runningNodeOccupancy
+
+    nodesToDisconnect.forEach( nodeToDisconnect => {
+        const [row, col] = nodeToDisconnect.split('-');
+        const neighbors = [
+            `${parseInt(row, 10) + 1}-${col}`, // Bottom neighbor
+            `${parseInt(row, 10) - 1}-${col}`, // Top neighbor
+            `${row}-${parseInt(col, 10) + 1}`, // Right neighbor
+            `${row}-${parseInt(col, 10) - 1}`  // Left neighbor
+        ];
+
+        neighbors.forEach(neighbor => {
+            if (updatedAdjacencyList[neighbor]) {
+                updatedAdjacencyList[neighbor] = updatedAdjacencyList[neighbor].filter(n => n !== nodeToDisconnect);
+            }
+        });
     })
     return updatedAdjacencyList;
 }

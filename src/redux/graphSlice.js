@@ -45,6 +45,12 @@ const graphSlice = createSlice({
                     parkedCar: ''
                 }
             })
+        } else if(action.payload.action === 'entrance') {
+            action.payload.nodes.forEach(node => {
+                updatedNodeOccupancy[node] = {
+                    entrance: true
+                }
+            })
         } else if(action.payload.action === 'reset') {
             action.payload.nodes.forEach(node => {
                 delete updatedNodeOccupancy[node]

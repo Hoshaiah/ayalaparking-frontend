@@ -32,15 +32,18 @@ const Graph = () => {
             return 'bg-black'
         }
 
-        if(nodeOccupancy[node] && nodeOccupancy[node].parking === 'small') {
+        if(nodeOccupancy[node].parking === 'small') {
             return 'bg-red-200'
         }
 
-        if(nodeOccupancy[node] && nodeOccupancy[node].parking === 'medium') {
+        if(nodeOccupancy[node].parking === 'medium') {
             return 'bg-green-500'
         }
-        if(nodeOccupancy[node] && nodeOccupancy[node].parking === 'large') {
+        if(nodeOccupancy[node].parking === 'large') {
             return 'bg-blue-700'
+        }
+        if(nodeOccupancy[node].entrance === true) {
+            return 'bg-orange-700'
         }
         return ''
     }
@@ -80,9 +83,9 @@ const Graph = () => {
                 );
             });
             setRows(rowToSet)
-            // console.log(deepCompare(graphState.originalAdjacencyList, graphState.adjacencyList))
-            // console.log(graphState.originalAdjacencyList)
-            // console.log(graphState.adjacencyList)
+            console.log(deepCompare(graphState.originalAdjacencyList, graphState.adjacencyList))
+            console.log(graphState.originalAdjacencyList)
+            console.log(graphState.adjacencyList)
         }
         mapNodes()
     }, [graphState.shortestPath, viewState.selectedNodes, graphState.nodeOccupancy, graphState.adjacencyList, viewState.currentView])

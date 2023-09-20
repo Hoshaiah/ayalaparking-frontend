@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { resetNodes, deepCompare, dijkstra, turnNodesToParking, findShortestPath, blockNodes } from "../utils/graphUtils";
+import { resetNodes, deepCompare, dijkstra, turnNodesToParking, findShortestPath, blockNodes, turnNodestoEntrance } from "../utils/graphUtils";
 import { setAdjacencyList, setNodeOccupancy, setShortestPath } from "../redux/graphSlice";
 import { removeAllSelectedNodes, setCurrentView } from "../redux/viewSlice";
 
@@ -45,6 +45,16 @@ const SideNav = () => {
         dispatch(removeAllSelectedNodes())
     }
 
+    const handleEntranceClick = () => {
+        dispatch(setNodeOccupancy({
+            nodes: viewState.selectedNodes,
+            action: 'entrance',
+        }))
+        const updatedAdjacencyList = turnNodestoEntrance(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy)
+        dispatch(setAdjacencyList(updatedAdjacencyList))
+        dispatch(removeAllSelectedNodes())
+    }
+
     return (
         <div className="h-[calc(100vh-36px)] w-1/3 bg-blue-200">
             <button className="bg-slate-600 text-white p-1 rounded-sm" onClick={handleBlockClick}>Block</button>
@@ -52,6 +62,7 @@ const SideNav = () => {
             <button className="bg-red-200 text-black p-1 rounded-sm" onClick={() => handleParkingClick('small')}>Small Parking</button>
             <button className="bg-green-500 text-black p-1 rounded-sm" onClick={() => handleParkingClick('medium')}>Medium Parking</button>
             <button className="bg-blue-700 text-white p-1 rounded-sm" onClick={() => handleParkingClick('large')}>Large Parking</button>
+            <button className="bg-orange-500 text-white p-1 rounded-sm" onClick={() => handleEntranceClick()}>Entrance</button>
             <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleFindShortestPath}>Find Shortest Path</button>
         </div>
     )
