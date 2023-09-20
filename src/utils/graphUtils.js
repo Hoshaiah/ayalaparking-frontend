@@ -184,6 +184,30 @@ export const turnNodestoEntrance= (adjacencyList, nodesToDisconnect, nodeOccupan
     return updatedAdjacencyList;
 }
 
+export const parkCarOnNode = (adjacencyList, nodesToDisconnect, nodeOccupancy) => {
+    let updatedAdjacencyList = {...adjacencyList} 
+    let runningNodeOccupancy = {...nodeOccupancy}
+    updatedAdjacencyList = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).updatedAdjacencyList
+    runningNodeOccupancy = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).runningNodeOccupancy
+
+    nodesToDisconnect.forEach( nodeToDisconnect => {
+        const [row, col] = nodeToDisconnect.split('-');
+        const neighbors = [
+            `${parseInt(row, 10) + 1}-${col}`, // Bottom neighbor
+            `${parseInt(row, 10) - 1}-${col}`, // Top neighbor
+            `${row}-${parseInt(col, 10) + 1}`, // Right neighbor
+            `${row}-${parseInt(col, 10) - 1}`  // Left neighbor
+        ];
+
+        neighbors.forEach(neighbor => {
+            if (updatedAdjacencyList[neighbor]) {
+                updatedAdjacencyList[neighbor] = updatedAdjacencyList[neighbor].filter(n => n !== nodeToDisconnect);
+            }
+        });
+    })
+    return updatedAdjacencyList;
+}
+
 export const countNumberOfEntrances = (nodes, occupancy) => {
     let count = 0;
     let nodeKeys = [...nodes]
@@ -196,6 +220,26 @@ export const countNumberOfEntrances = (nodes, occupancy) => {
         }
     });
     return count;
+}
+
+export const getEntranceNodes = (occupancy) => {
+    const filteredNodes = Object.entries(occupancy)
+        .filter(([key, value]) => value.entrance === true)
+        .map(([key, value]) => key);
+
+    return filteredNodes
+}
+
+export const getDateTimeNow = () => {
+    const now = new Date();
+    const year = now.getFullYear().toString().padStart(4, '0');
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    
+    const initialDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+    return initialDateTime
 }
 
 export const deepCompare = (obj1, obj2, path = '') => {
