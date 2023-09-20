@@ -23,6 +23,28 @@ const Graph = () => {
         }
     }
 
+    const determineNodeParkingColor = (nodeOccupancy, node) => {
+        if(!nodeOccupancy[node]) {
+            return ''
+        }
+
+        if(nodeOccupancy[node].parking === 'blocked') {
+            return 'bg-black'
+        }
+
+        if(nodeOccupancy[node] && nodeOccupancy[node].parking === 'small') {
+            return 'bg-red-200'
+        }
+
+        if(nodeOccupancy[node] && nodeOccupancy[node].parking === 'medium') {
+            return 'bg-green-500'
+        }
+        if(nodeOccupancy[node] && nodeOccupancy[node].parking === 'large') {
+            return 'bg-blue-700'
+        }
+        return ''
+    }
+
 
     useEffect(() => {
         const mapNodes = () => {
@@ -43,11 +65,11 @@ const Graph = () => {
                             const [row, col] = node.split('-');
                             const nodeInShortestPath = shortestPath.has(node)
                             const nodeIsSelected = selectedNodes.has(node)
-                            const nodeIsBlocked = nodeOccupancy[node] && nodeOccupancy[node].parking === 'block' 
+                            const nodeParkingColor = determineNodeParkingColor(nodeOccupancy, node) 
                             return (
                                 <button onClick={() => {handleNodeClick(node, nodeIsSelected)}} key={node} className={`border-black border w-8 h-8 flex items-center justify-center 
                                 ${nodeInShortestPath && viewState.currentView === 'shortestPath' ? 'bg-yellow-300' : ''}
-                                ${nodeIsBlocked ? 'bg-black': ''}
+                                ${nodeParkingColor}
                                 ${viewState.currentView === "selectView" && nodeIsSelected ? 'border-2 border-yellow-400': ''}
                                 `} >
                                     {node}
@@ -58,7 +80,7 @@ const Graph = () => {
                 );
             });
             setRows(rowToSet)
-            // console.log(deepCompare(graphState.adjacencyList, graphState.originalAdjacencyList))
+            // console.log(deepCompare(graphState.originalAdjacencyList, graphState.adjacencyList))
             // console.log(graphState.originalAdjacencyList)
             // console.log(graphState.adjacencyList)
         }
