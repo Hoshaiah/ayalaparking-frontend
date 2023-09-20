@@ -130,14 +130,8 @@ export const resetNodes = (adjacencyList, nodesToAdd, nodeOccupancy) => {
             }
         })
         
-        if(nodeToAdd === "7-2") {
-            console.log({runningNodeOccupancy,nodeToAdd, neighbors})
-            console.log(updatedAdjacencyList['7-1'])
-        }
-
         // Step 2: Reconnect with top, bottom, left, right neighbors to node
         neighbors.forEach(neighbor => {
-            console.log(neighbor)
             if (updatedAdjacencyList[neighbor]) {
                 const nodeIsNotBlockedOrParking = !runningNodeOccupancy[neighbor] || !runningNodeOccupancy[neighbor].parking
                 if (!updatedAdjacencyList[neighbor].includes(nodeToAdd) && nodeIsNotBlockedOrParking) {
@@ -147,7 +141,6 @@ export const resetNodes = (adjacencyList, nodesToAdd, nodeOccupancy) => {
                     ]
                 }
             }
-            console.log(updatedAdjacencyList['7-1'])
         });
         delete runningNodeOccupancy[nodeToAdd]
     });
