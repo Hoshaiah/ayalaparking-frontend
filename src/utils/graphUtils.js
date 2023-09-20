@@ -86,7 +86,7 @@ export const removeNodes = (adjacencyList, nodesToRemove) => {
 
     nodesToRemove.forEach(nodeToRemove => {
         // Step 1: Remove the node
-        // delete updatedAdjacencyList[nodeToRemove];
+        updatedAdjacencyList[nodeToRemove] = [];
 
         // Step 2: Remove references from top, bottom, left, right neighbors
         const [row, col] = nodeToRemove.split('-');
@@ -107,36 +107,61 @@ export const removeNodes = (adjacencyList, nodesToRemove) => {
     return updatedAdjacencyList;
 }
 
-export const addNodes = (adjacencyList, nodesToAdd) => {
+export const resetNodes = (adjacencyList, nodesToAdd, nodeOccupancy) => {
     let updatedAdjacencyList = { ...adjacencyList };
+    let runningNodeOccupancy = {...nodeOccupancy}
 
     nodesToAdd.forEach(nodeToAdd => {
         const [row, col] = nodeToAdd.split('-');
 
-        // Step 1: Add the node back
-        // updatedAdjacencyList[nodeToAdd] = [];
-
-        // Step 2: Reconnect with top, bottom, left, right neighbors
         const neighbors = [
             `${parseInt(row, 10) + 1}-${col}`, // Bottom neighbor
             `${parseInt(row, 10) - 1}-${col}`, // Top neighbor
             `${row}-${parseInt(col, 10) + 1}`, // Right neighbor
             `${row}-${parseInt(col, 10) - 1}`  // Left neighbor
         ];
-
+        // Step 1: Add adjacent neighbors to node back
         neighbors.forEach(neighbor => {
-            if (updatedAdjacencyList[neighbor]) {
-                if (!updatedAdjacencyList[neighbor].includes(nodeToAdd))
-                updatedAdjacencyList[neighbor] = [
-                    ...updatedAdjacencyList[neighbor],
-                    nodeToAdd
-                ]
+            const nodeIsNotBlocked = !runningNodeOccupancy[neighbor] || (runningNodeOccupancy[neighbor].parking && runningNodeOccupancy[neighbor].parking !== 'blocked')
+            if(nodeIsNotBlocked && updatedAdjacencyList[neighbor]){
+                if(!updatedAdjacencyList[nodeToAdd].includes(neighbor)){
+                    updatedAdjacencyList[nodeToAdd] = [...updatedAdjacencyList[nodeToAdd], neighbor]
+                }
             }
+        })
+        
+        if(nodeToAdd === "7-2") {
+            console.log({runningNodeOccupancy,nodeToAdd, neighbors})
+            console.log(updatedAdjacencyList['7-1'])
+        }
+
+        // Step 2: Reconnect with top, bottom, left, right neighbors to node
+        neighbors.forEach(neighbor => {
+            console.log(neighbor)
+            if (updatedAdjacencyList[neighbor]) {
+                const nodeIsNotBlockedOrParking = !runningNodeOccupancy[neighbor] || !runningNodeOccupancy[neighbor].parking
+                if (!updatedAdjacencyList[neighbor].includes(nodeToAdd) && nodeIsNotBlockedOrParking) {
+                    updatedAdjacencyList[neighbor] = [
+                        ...updatedAdjacencyList[neighbor],
+                        nodeToAdd
+                    ]
+                }
+            }
+            console.log(updatedAdjacencyList['7-1'])
         });
+        delete runningNodeOccupancy[nodeToAdd]
     });
 
     return updatedAdjacencyList;
 };
+
+export const disconnectNodeToOutgoing = (adjacencyList, nodesToDisconnect) => {
+    let updatedAdjacencyList = {...adjacencyList} 
+    nodesToDisconnect.forEach(nodeToDisconnect => {
+        updatedAdjacencyList[nodeToDisconnect] = []
+    })
+    return updatedAdjacencyList;
+}
 
 export const deepCompare = (obj1, obj2, path = '') => {
     // Check if both inputs are arrays

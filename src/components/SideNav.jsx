@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { addNodes, deepCompare, dijkstra, findShortestPath, removeNodes } from "../utils/graphUtils";
+import { resetNodes, deepCompare, dijkstra, disconnectNodeToOutgoing, findShortestPath, removeNodes } from "../utils/graphUtils";
 import { setAdjacencyList, setNodeOccupancy, setShortestPath } from "../redux/graphSlice";
 import { removeAllSelectedNodes, setCurrentView } from "../redux/viewSlice";
 
@@ -11,7 +11,7 @@ const SideNav = () => {
     const handleBlockClick = () => {
         dispatch(setNodeOccupancy({
             nodes: viewState.selectedNodes,
-            action: 'block',
+            action: 'blocked',
         }))
         const updatedAdjacencyList = removeNodes(graph.adjacencyList, viewState.selectedNodes)
         dispatch(setAdjacencyList(updatedAdjacencyList))
@@ -22,7 +22,7 @@ const SideNav = () => {
             nodes: viewState.selectedNodes,
             action: 'reset',
         }))
-        const updatedAdjacencyList = addNodes(graph.adjacencyList, viewState.selectedNodes)
+        const updatedAdjacencyList = resetNodes(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy)
         dispatch(setAdjacencyList(updatedAdjacencyList))
         dispatch(removeAllSelectedNodes())
     }
@@ -34,10 +34,24 @@ const SideNav = () => {
         dispatch(setCurrentView('shortestPath'))
     }
 
+    const handleParkingClick = (parking) => {
+        dispatch(setNodeOccupancy({
+            nodes: viewState.selectedNodes,
+            action: 'parking',
+            parking: parking
+        }))
+        const updatedAdjacencyList = disconnectNodeToOutgoing(graph.adjacencyList, viewState.selectedNodes)
+        dispatch(setAdjacencyList(updatedAdjacencyList))
+        dispatch(removeAllSelectedNodes())
+    }
+
     return (
         <div className="h-[calc(100vh-36px)] w-1/3 bg-blue-200">
             <button className="bg-slate-600 text-white p-1 rounded-sm" onClick={handleBlockClick}>Block</button>
             <button className="bg-slate-100 text-black p-1 rounded-sm" onClick={handleResetClick}>Reset</button>
+            <button className="bg-red-200 text-black p-1 rounded-sm" onClick={() => handleParkingClick('small')}>Small Parking</button>
+            <button className="bg-green-500 text-black p-1 rounded-sm" onClick={() => handleParkingClick('medium')}>Medium Parking</button>
+            <button className="bg-blue-700 text-white p-1 rounded-sm" onClick={() => handleParkingClick('large')}>Large Parking</button>
             <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleFindShortestPath}>Find Shortest Path</button>
         </div>
     )
