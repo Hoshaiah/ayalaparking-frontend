@@ -56,15 +56,6 @@ export const dijkstra = (adjacencyList, startNode) => {
 }
 
 export const findShortestPath = (distances, previous, startNode, endNode) => {
-    console.log(distances)
-    console.log(previous)
-    console.log({startNode, endNode})
-    console.log(distances[startNode])
-    console.log(distances[endNode])
-    // if (!distances[startNode] || !distances[endNode]) {
-    //     return []; // Either startNode or endNode does not exist
-    // }
-
     const path = [];
     let currentNode = endNode;
 
@@ -101,8 +92,8 @@ export const findNearestParking = (distances, nodeOccupancy, vehicleSize, priori
             }));
 
     // Sort nodes
+    const sizeOrder = { small: 1, medium: 2, large: 3 };
     if(prioritizeCost) {
-        const sizeOrder = { small: 1, medium: 2, large: 3 };
         parkingNodes = parkingNodes.sort((a, b) => {
             const sizeA = sizeOrder[a.parking];
             const sizeB = sizeOrder[b.parking];
@@ -115,9 +106,18 @@ export const findNearestParking = (distances, nodeOccupancy, vehicleSize, priori
         });
         return parkingNodes
     }
-    parkingNodes = parkingNodes.sort((a, b) => a.distance - b.distance)
-    return parkingNodes
 
+    parkingNodes = parkingNodes.sort((a, b) => {
+        if (a.distance !== b.distance) {
+          return a.distance - b.distance;
+        }
+      
+        const sizeA = sizeOrder[a.parking];
+        const sizeB = sizeOrder[b.parking];
+      
+        return sizeA - sizeB;
+    });
+    return parkingNodes
 }
 
 
