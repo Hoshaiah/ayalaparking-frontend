@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { resetNodes, deepCompare, dijkstra, turnNodesToParking, findShortestPath, removeNodes } from "../utils/graphUtils";
+import { resetNodes, deepCompare, dijkstra, turnNodesToParking, findShortestPath, blockNodes } from "../utils/graphUtils";
 import { setAdjacencyList, setNodeOccupancy, setShortestPath } from "../redux/graphSlice";
 import { removeAllSelectedNodes, setCurrentView } from "../redux/viewSlice";
 
@@ -13,7 +13,7 @@ const SideNav = () => {
             nodes: viewState.selectedNodes,
             action: 'blocked',
         }))
-        const updatedAdjacencyList = removeNodes(graph.adjacencyList, viewState.selectedNodes)
+        const updatedAdjacencyList = blockNodes(graph.adjacencyList, viewState.selectedNodes)
         dispatch(setAdjacencyList(updatedAdjacencyList))
         dispatch(removeAllSelectedNodes())
     }

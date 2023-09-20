@@ -81,7 +81,7 @@ export const findShortestPath = (distances, previous, startNode, endNode) => {
 }
 
 
-export const removeNodes = (adjacencyList, nodesToRemove) => {
+export const blockNodes = (adjacencyList, nodesToRemove) => {
     const updatedAdjacencyList = { ...adjacencyList };
 
     nodesToRemove.forEach(nodeToRemove => {
