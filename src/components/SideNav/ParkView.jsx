@@ -1,16 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
-import { dijkstra, findShortestPath, getDateTimeNow, getEntranceNodes } from "../../utils/graphUtils";
-import {  setShortestPath } from "../../redux/graphSlice";
+import { dijkstra, findNearestParking, findShortestPath, getDateTimeNow, getEntranceNodes } from "../../utils/graphUtils";
+import {  setDistances, setShortestPath } from "../../redux/graphSlice";
 import { setCurrentView } from "../../redux/viewSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const ParkView = () => {
     const dispatch = useDispatch()
     const graph = useSelector(state => state.graph)
-    const [plateNumber, setPlateNumber] = useState('')
-    const [vehicleSize, setVehicleSize] = useState('small')
-    const [entranceSelected, setEntranceSelected] = useState('')
-    const [dateInput, setDateInput] = useState(getDateTimeNow())
+    const plateNumberInput = useRef('')
+    const entranceInput = useRef()
+    const prioritizeCostInput = useRef(false)
+    // const [vehicleSize, setVehicleSize] = useState('small')
+    const vehicleSize = useRef('small')
+    const [dateInput, setDateInput]= useState(getDateTimeNow())
     const [entranceSelection, setEntranceSelection] = useState([])
 
     const handleFindShortestPath = () => {
@@ -18,6 +20,16 @@ const ParkView = () => {
         const shortestPath = findShortestPath(data.distances, data.previous, "0-0","14-14")
         dispatch(setShortestPath(shortestPath))
         dispatch(setCurrentView('parkView'))
+    }
+
+    const handleCalculateShortestPaths = () => {
+        const data = dijkstra(graph.adjacencyList, entranceInput.current.value )
+        dispatch(setDistances(data.distances))
+        dispatch(setDistances(data.previous))
+        const nearestParking = findNearestParking(data.distances,graph.nodeOccupancy, vehicleSize.current.value, prioritizeCostInput.current.checked)[0]
+
+        const shortestPath = findShortestPath(data.distances, data.previous, entranceInput.current.value, nearestParking.node)
+        dispatch(setShortestPath(shortestPath)) 
     }
 
     useEffect(() => {
@@ -34,18 +46,17 @@ const ParkView = () => {
                 <h1>Plate Number</h1>
                 <input
                     type="text"
-                    value={plateNumber}
-                    onChange={setPlateNumber}
+                    ref={plateNumberInput}
                 ></input>
             </div>
             <div className="flex">
                 <h1>Vehicle size:</h1>
                 <select
-                    value={vehicleSize}
-                    onChange={setVehicleSize}
+                    ref={vehicleSize}
+                    // onChange={setVehicleSize}
                     className="border p-2 rounded"
                 >
-                    {['Small','Medium','Large'].map((item, index) => (
+                    {['small','medium','large'].map((item, index) => (
                         <option key={index} value={item}>
                             {item}
                         </option>
@@ -64,8 +75,7 @@ const ParkView = () => {
             <div className="flex">
                 <h1>Entrance:</h1>
                 <select
-                    value={entranceSelected}
-                    onChange={setEntranceSelected}
+                    ref={entranceInput}
                     className="border p-2 rounded"
                 >
                     {entranceSelection.map((item, index) => (
@@ -75,7 +85,12 @@ const ParkView = () => {
                     ))}
                 </select>
             </div>
-            <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleFindShortestPath}>Find Shortest Path</button>
+            <div className="flex">
+                <h1>Prioritize Cost</h1>
+                <input ref={prioritizeCostInput} type="checkbox" />
+            </div>
+            <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleCalculateShortestPaths}>Calculate Nearest Parking</button>
+            {/* <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleFindShortestPath}>Find Shortest Path</button> */}
         </div>
     )
 }

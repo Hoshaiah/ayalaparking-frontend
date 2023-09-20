@@ -80,6 +80,46 @@ export const findShortestPath = (distances, previous, startNode, endNode) => {
     return path;
 }
 
+export const findNearestParking = (distances, nodeOccupancy, vehicleSize, prioritizeCost) => {
+
+    // Filter nodes
+    let parkingNodes = Object.entries(nodeOccupancy)
+        .filter(([key, value]) => {
+            if(vehicleSize==='small') {
+                return ['small','medium','large'].includes(value.parking)
+            } else if (vehicleSize === 'medium') {
+                return ['medium','large'].includes(value.parking)
+            } else if(vehicleSize === 'large') {
+                return ['large'].includes(value.parking)
+            }
+        })
+        .map(([key, value]) => (
+            {
+                node: key,
+                parking: value.parking,
+                distance: distances[key]
+            }));
+
+    // Sort nodes
+    if(prioritizeCost) {
+        const sizeOrder = { small: 1, medium: 2, large: 3 };
+        parkingNodes = parkingNodes.sort((a, b) => {
+            const sizeA = sizeOrder[a.parking];
+            const sizeB = sizeOrder[b.parking];
+        
+            if (sizeA !== sizeB) {
+              return sizeA - sizeB;
+            }
+        
+            return a.distance - b.distance;
+        });
+        return parkingNodes
+    }
+    parkingNodes = parkingNodes.sort((a, b) => a.distance - b.distance)
+    return parkingNodes
+
+}
+
 
 export const blockNodes = (adjacencyList, nodesToRemove) => {
     const updatedAdjacencyList = { ...adjacencyList };
