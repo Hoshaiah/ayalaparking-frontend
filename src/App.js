@@ -5,7 +5,7 @@ import Graph from './components/Graph';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAdjacencyList, setGraphSize, setOriginalAdjacencyList, setShortestPath } from './redux/graphSlice';
 import { useEffect } from 'react';
-import SideNav from './components/SideNav';
+import SideNav from './components/SideNav/SideNav';
 function App() {
   const dispatch = useDispatch()
   const graphState = useSelector(state => state.graph)
