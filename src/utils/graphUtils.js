@@ -85,6 +85,7 @@ export const findNearestParking = (distances, nodeOccupancy, vehicleSize, priori
             }
         })
         .filter(([key, value]) => nodeOccupancy[key].parkedCar === '')
+        .filter(([key, value]) => distances[key] !== Infinity)
         .map(([key, value]) => (
             {
                 node: key,
