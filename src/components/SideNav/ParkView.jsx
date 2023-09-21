@@ -8,11 +8,12 @@ const ParkView = () => {
     const dispatch = useDispatch()
     const graph = useSelector(state => state.graph)
     const plateNumberInput = useRef('')
+    const [dateInput, setDateInput]= useState(getDateTimeNow())
+    const [entranceSelection, setEntranceSelection] = useState([])
     const [entranceInput, setEntranceInput] = useState(getEntranceNodes(graph.nodeOccupancy)[0])
     const [prioritizeCostInput, setPriorityCostInput]= useState(false) 
     const [vehicleSize, setVehicleSize]= useState('small')
-    const [dateInput, setDateInput]= useState(getDateTimeNow())
-    const [entranceSelection, setEntranceSelection] = useState([])
+    const [parkButtonDisabled, setParkButtonDisabled] = useState(true)
 
     const handleDateInputChange = (e) => {
         const inputValue = e.target.value;
@@ -35,6 +36,17 @@ const ParkView = () => {
     const handleParkVehicle = () => {
 
     }
+
+    useEffect(()=> {
+        const changeParkButtonAvailability = () => {
+            if(graph.shortestPath.length > 0) {
+                setParkButtonDisabled(false)
+            } else {
+                setParkButtonDisabled(true)
+            }
+        }
+        changeParkButtonAvailability()
+    },[graph.shortestPath])
 
     useEffect(() => {
         const getEntranceNodesList = () => {
@@ -103,7 +115,7 @@ const ParkView = () => {
             </div>
             <div className="flex">
                 <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleCalculateShortestPaths}>Calculate Nearest Parking</button>
-                <button className="bg-slate-800 text-white p-1 rounded-sm" onClick={handleParkVehicle}>Park</button>
+                <button className={`${parkButtonDisabled? 'bg-slate-400' : 'bg-slate-600'} text-white p-1 rounded-sm`} onClick={handleParkVehicle} disabled={parkButtonDisabled}>Park</button>
             </div>
         </div>
     )
