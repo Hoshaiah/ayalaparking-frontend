@@ -8,7 +8,9 @@ import { setCarHistory } from "../../redux/historySlice";
 const ParkView = () => {
     const dispatch = useDispatch()
     const graph = useSelector(state => state.graph)
+    const history = useSelector(state => state.history)
     const [plateNumberInput, setPlateNumberInput]= useState('')
+    const [plateNumberHelperText, setPlateNumberHelperText] = useState('')
     const [dateTimeHelperText, setDateTimeHelperText] = useState('')
     const [dateInput, setDateInput]= useState(getDateTimeNow())
     const [entranceSelection, setEntranceSelection] = useState([])
@@ -40,6 +42,12 @@ const ParkView = () => {
         const isDateValid = validateDateFormat(dateInput)
         if(!isDateValid) {
             setDateTimeHelperText('Date format is invalid')
+            return;
+        }
+
+        const currentVehicleHistory = history.carHistory[plateNumberInput]
+        if (currentVehicleHistory && currentVehicleHistory[currentVehicleHistory.length-1].action === 'park') {
+            setPlateNumberHelperText('This car is already parked!')
             return;
         }
 
@@ -93,10 +101,11 @@ const ParkView = () => {
         <div>
             <div className="flex">
                 <h1>Plate Number</h1>
+                <p>{plateNumberHelperText}</p>
                 <input
                     type="text"
                     value={plateNumberInput}
-                    onChange={e => setPlateNumberInput(e.target.value)}
+                    onChange={e => {setPlateNumberInput(e.target.value); setPlateNumberHelperText('');}}
                     ></input>
             </div>
             <div className="flex">

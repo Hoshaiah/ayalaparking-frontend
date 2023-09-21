@@ -7,30 +7,28 @@ const historySlice = createSlice({
   },
   reducers: {
     setCarHistory: (state, action) => {
-        if (!state.carHistory[action.payload.node]){
+        if (!state.carHistory[action.payload.carPlate]){
             state.carHistory = {
                 ...state.carHistory,
-                [action.payload.node]: [{
+                [action.payload.carPlate]: [{
                     action: action.payload.action,
                     node: action.payload.node,
                     parkedCar: action.payload.parkedCar,
                     parkingSize: action.payload.parkingSize,
                     entryTime: action.payload.entryTime,
-                    carPlate: action.payload.carPlate
                 }]
             }            
         } else {
             state.carHistory = {
                 ...state.carHistory,
-                [action.payload.node]: [
-                    ...state.carHistory[action.payload.node],
+                [action.payload.carPlate]: [
+                    ...state.carHistory[action.payload.carPlate],
                     {
                     action: action.payload.action,
                     node: action.payload.node,
                     parkedCar: action.payload.parkedCar,
                     parkingSize: action.payload.parkingSize,
                     entryTime: action.payload.entryTime,
-                    carPlate: action.payload.carPlate
                 }]
             }            
 
