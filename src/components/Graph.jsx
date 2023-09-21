@@ -89,14 +89,14 @@ const Graph = () => {
                             const nodeIsSelected = selectedNodes.has(node)
                             const nodeParkingColor = determineNodeParkingColor(nodeOccupancy, node) 
                             return (
-                                <div onClick={() => {handleNodeClick(node, nodeIsSelected)}} key={node} className={`border-black border w-12 h-12 flex flex-col items-center justify-between cursor-pointer 
+                                <div onClick={() => {handleNodeClick(node, nodeIsSelected)}} key={node} className={`border-black border w-10 h-10 flex flex-col items-center justify-between cursor-pointer 
                                 ${nodeInShortestPath && viewState.currentView === 'parkView' ? 'bg-yellow-300' : ''}
                                 ${nodeParkingColor}
                                 ${viewState.currentView === "editView" && nodeIsSelected ? 'border-2 border-yellow-400': ''}
                                 `} >
-                                    <div className='h-4 text-lg flex justify-center items-center pt-5'>{determineNodeParkedCar(nodeOccupancy, node)}</div>
+                                    <div className='h-4 text-lg flex justify-center items-center pt-4'>{determineNodeParkedCar(nodeOccupancy, node)}</div>
                                     {/* <div className='h-8 text-lg'>{'S'}</div> */}
-                                    <div className='text-[0.7rem] h-4'>{node}</div>
+                                    <div className='text-[0.6rem] h-4'>{node}</div>
                                 </div>
                             );
                         })}
