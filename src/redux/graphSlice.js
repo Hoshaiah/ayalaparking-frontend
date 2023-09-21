@@ -66,6 +66,13 @@ const graphSlice = createSlice({
                 entryTime: action.payload.entryTime,
                 carPlate: action.payload.carPlate
             }
+        } else if(action.payload.action === 'unparkCar') {
+            updatedNodeOccupancy[action.payload.node] = {
+                ...updatedNodeOccupancy[action.payload.node],
+                parkedCar: '',
+            }
+            delete updatedNodeOccupancy[action.payload.node].entryTime
+            delete updatedNodeOccupancy[action.payload.node].carPlate
         }
         state.nodeOccupancy = updatedNodeOccupancy
     },

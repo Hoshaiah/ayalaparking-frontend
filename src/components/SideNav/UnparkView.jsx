@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { calculateHourDifference, calculateParkingCost, dijkstra, findShortestPath, getDateTimeNow, getParkedCarNodes, validateDateFormat } from "../../utils/graphUtils";
-import {  setShortestPath } from "../../redux/graphSlice";
+import { calculateHourDifference, calculateParkingCost, dijkstra, findShortestPath, getDateTimeNow, getParkedCarNodes, turnNodesToParking, validateDateFormat } from "../../utils/graphUtils";
+import {  setAdjacencyList, setNodeOccupancy, setShortestPath } from "../../redux/graphSlice";
 import { setCurrentView } from "../../redux/viewSlice";
 import { useState, useEffect } from "react";
 
@@ -21,11 +21,14 @@ const UnparkView = () => {
         }
         
         const numberOfHoursParked = calculateHourDifference(graph.nodeOccupancy[parkedCarInput].entryTime, dateInput)
-        console.log(graph.nodeOccupancy[parkedCarInput].entryTime)
-        console.log(dateInput)
-        console.log(numberOfHoursParked)
-        console.log(calculateParkingCost(numberOfHoursParked, graph.nodeOccupancy[parkedCarInput].parking))
         setReceipt(calculateParkingCost(numberOfHoursParked, graph.nodeOccupancy[parkedCarInput].parking))
+
+        dispatch(setNodeOccupancy({
+            node: parkedCarInput,
+            action: 'unparkCar',
+        }))
+        const updatedAdjacencyList = turnNodesToParking(graph.adjacencyList, [parkedCarInput], graph.nodeOccupancy)
+        dispatch(setAdjacencyList(updatedAdjacencyList))
     }
 
     const handleDateInputChange = (e) => {
