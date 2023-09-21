@@ -3,6 +3,7 @@ import { blockNodes, dijkstra, findNearestParking, findShortestPath, getDateTime
 import {  setAdjacencyList, setDistances, setNodeOccupancy, setShortestPath } from "../../redux/graphSlice";
 import { setCurrentView } from "../../redux/viewSlice";
 import { useEffect, useRef, useState } from "react";
+import { setCarHistory } from "../../redux/historySlice";
 
 const ParkView = () => {
     const dispatch = useDispatch()
@@ -43,6 +44,14 @@ const ParkView = () => {
         }
 
        const nodeDestination = graph.shortestPath[graph.shortestPath.length-1]
+       dispatch(setCarHistory({
+           action: 'park',
+           node: nodeDestination,
+           parkedCar: vehicleSize,
+           parkingSize: graph.nodeOccupancy[nodeDestination].parking,
+           entryTime: dateInput,
+           carPlate: plateNumberInput
+       }))
         dispatch(setNodeOccupancy({
             action: 'parkCar',
             node:  nodeDestination,

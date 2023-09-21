@@ -3,6 +3,7 @@ import { calculateHourDifference, calculateParkingCost, dijkstra, findShortestPa
 import {  setAdjacencyList, setNodeOccupancy, setShortestPath } from "../../redux/graphSlice";
 import { setCurrentView } from "../../redux/viewSlice";
 import { useState, useEffect } from "react";
+import { setCarHistory } from "../../redux/historySlice";
 
 const UnparkView = () => {
     const dispatch = useDispatch()
@@ -23,6 +24,16 @@ const UnparkView = () => {
         const numberOfHoursParked = calculateHourDifference(graph.nodeOccupancy[parkedCarInput].entryTime, dateInput)
         setReceipt(calculateParkingCost(numberOfHoursParked, graph.nodeOccupancy[parkedCarInput].parking))
 
+        dispatch(setCarHistory({
+            action: 'unpark',
+            node: parkedCarInput,
+            parkedCar: graph.nodeOccupancy[parkedCarInput].parkedCar,
+            parkingSize: graph.nodeOccupancy[parkedCarInput].parking,
+            entryTime: graph.nodeOccupancy[parkedCarInput].entryTime,
+            exitTime: dateInput,
+            carPlate: graph.nodeOccupancy[parkedCarInput].carPlate,
+            totalBill: receipt,
+        }))
         dispatch(setNodeOccupancy({
             node: parkedCarInput,
             action: 'unparkCar',
