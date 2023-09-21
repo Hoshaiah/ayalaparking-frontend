@@ -12,7 +12,7 @@ const UnparkView = () => {
     const [parkedCarInput, setParkedCarInput] = useState()
     const [dateTimeHelperText, setDateTimeHelperText] = useState('')
     const [dateInput, setDateInput]= useState(getDateTimeNow())
-    const [receipt, setReceipt] = useState({})
+    const [receipt, setReceipt] = useState()
     const [disabledUnparkButton, setDisabledUnparkButton] = useState(parkedCarsSelection.length > 0)
 
     const handleUnparkCar = () => {
