@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { dijkstra, findNearestParking, findShortestPath, getDateTimeNow, getEntranceNodes } from "../../utils/graphUtils";
+import { dijkstra, findNearestParking, findShortestPath, getDateTimeNow, getEntranceNodes, validateDateFormat } from "../../utils/graphUtils";
 import {  setDistances, setShortestPath } from "../../redux/graphSlice";
 import { setCurrentView } from "../../redux/viewSlice";
 import { useEffect, useRef, useState } from "react";
@@ -7,7 +7,8 @@ import { useEffect, useRef, useState } from "react";
 const ParkView = () => {
     const dispatch = useDispatch()
     const graph = useSelector(state => state.graph)
-    const plateNumberInput = useRef('')
+    const [plateNumberInput, setPlateNumberInput]= useState('')
+    const [dateTimeHelperText, setDateTimeHelperText] = useState('')
     const [dateInput, setDateInput]= useState(getDateTimeNow())
     const [entranceSelection, setEntranceSelection] = useState([])
     const [entranceInput, setEntranceInput] = useState(getEntranceNodes(graph.nodeOccupancy)[0])
@@ -16,6 +17,7 @@ const ParkView = () => {
     const [parkButtonDisabled, setParkButtonDisabled] = useState(true)
 
     const handleDateInputChange = (e) => {
+        setDateTimeHelperText('')
         const inputValue = e.target.value;
         const formattedDate = inputValue.replace('T', ' ');
         setDateInput(formattedDate);
@@ -34,19 +36,23 @@ const ParkView = () => {
     }
 
     const handleParkVehicle = () => {
-
+        const isDateValid = validateDateFormat(dateInput)
+        if(!isDateValid) {
+            setDateTimeHelperText('Date format is invalid')
+            return;
+        }
     }
 
     useEffect(()=> {
         const changeParkButtonAvailability = () => {
-            if(graph.shortestPath.length > 0) {
+            if(graph.shortestPath.length > 0 && plateNumberInput.trim().length > 0) {
                 setParkButtonDisabled(false)
             } else {
                 setParkButtonDisabled(true)
             }
         }
         changeParkButtonAvailability()
-    },[graph.shortestPath])
+    },[graph.shortestPath, plateNumberInput])
 
     useEffect(() => {
         const getEntranceNodesList = () => {
@@ -69,11 +75,13 @@ const ParkView = () => {
                 <h1>Plate Number</h1>
                 <input
                     type="text"
-                    ref={plateNumberInput}
-                ></input>
+                    value={plateNumberInput}
+                    onChange={e => setPlateNumberInput(e.target.value)}
+                    ></input>
             </div>
             <div className="flex">
                 <h1>Date and time of entry:</h1>
+                <p>{dateTimeHelperText}</p>
                 <input
                     type="datetime-local"
                     value={dateInput}

@@ -278,8 +278,13 @@ export const getDateTimeNow = () => {
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
     
-    const initialDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+    const initialDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
     return initialDateTime
+}
+
+export const validateDateFormat = (input) => {
+    const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
+    return regex.test(input);
 }
 
 export const deepCompare = (obj1, obj2, path = '') => {
