@@ -97,14 +97,10 @@ const UnparkView = () => {
                     step="60" // Set step to 60 seconds (1 minute)
                 />
             </div>
-            <div className="flex">
-                <h1>Bill Breakdown</h1>
-                <div>
-                </div>
-            </div>
             <button className={`${disabledUnparkButton ? 'bg-slate-200':'bg-slate-400'} text-black p-1 rounded-sm`} onClick={handleUnparkCar} disabled={disabledUnparkButton}>Unpark</button>
             {receipt && 
                 <div className="flex flex-col">
+                    <h1>Bill Breakdown</h1>
                     <h1>{`Number of hours parked: ~ ${Math.ceil(receipt.totalHours)}hrs (${receipt.totalHours}hrs)`}</h1>
                     {receipt.flatHourTotal && <h1>{`First 3 hours: ${receipt.flatHourTotal}`}</h1>}
                     {receipt.fullDayCosts && <h1>{`Number of full days(${receipt.numberOfFullDays}) x 5000: ${receipt.fullDayCosts} `}</h1>}
