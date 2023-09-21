@@ -69,6 +69,7 @@ const ParkView = () => {
         }))
         const updatedAdjacencyList = blockNodes(graph.adjacencyList, [nodeDestination], graph.nodeOccupancy)
         dispatch(setAdjacencyList(updatedAdjacencyList))
+        dispatch(setShortestPath([])) 
     }
 
     useEffect(()=> {
