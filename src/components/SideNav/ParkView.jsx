@@ -10,16 +10,14 @@ const ParkView = () => {
     const plateNumberInput = useRef('')
     const entranceInput = useRef()
     const prioritizeCostInput = useRef(false)
-    // const [vehicleSize, setVehicleSize] = useState('small')
     const vehicleSize = useRef('small')
     const [dateInput, setDateInput]= useState(getDateTimeNow())
     const [entranceSelection, setEntranceSelection] = useState([])
 
-    const handleFindShortestPath = () => {
-        const data = dijkstra(graph.adjacencyList, "0-0")
-        const shortestPath = findShortestPath(data.distances, data.previous, "0-0","14-14")
-        dispatch(setShortestPath(shortestPath))
-        dispatch(setCurrentView('parkView'))
+    const handleDateInputChange = (e) => {
+        const inputValue = e.target.value;
+        const formattedDate = inputValue.replace('T', ' ');
+        setDateInput(formattedDate);
     }
 
     const handleCalculateShortestPaths = () => {
@@ -68,7 +66,7 @@ const ParkView = () => {
                 <input
                     type="datetime-local"
                     value={dateInput}
-                    onChange={setDateInput}
+                    onChange={(e) => handleDateInputChange(e)}
                     step="60" // Set step to 60 seconds (1 minute)
                 />
             </div>
