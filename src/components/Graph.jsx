@@ -47,6 +47,26 @@ const Graph = () => {
         return ''
     }
 
+    const determineNodeParkedCar = (nodeOccupancy, node) => {
+        if(!nodeOccupancy[node] || !nodeOccupancy[node].parkedCar) {
+            return ''
+        } 
+
+
+        if(nodeOccupancy[node].parkedCar === 'small'){
+            return 'S'
+        }
+
+        if(nodeOccupancy[node].parkedCar === 'medium'){
+            return 'M'
+        }
+        if(nodeOccupancy[node].parkedCar === 'large'){
+            return 'L'
+        }
+
+        return ''
+    }
+
 
     useEffect(() => {
         const mapNodes = () => {
@@ -69,13 +89,15 @@ const Graph = () => {
                             const nodeIsSelected = selectedNodes.has(node)
                             const nodeParkingColor = determineNodeParkingColor(nodeOccupancy, node) 
                             return (
-                                <button onClick={() => {handleNodeClick(node, nodeIsSelected)}} key={node} className={`border-black border w-8 h-8 flex items-center justify-center 
+                                <div onClick={() => {handleNodeClick(node, nodeIsSelected)}} key={node} className={`border-black border w-12 h-12 flex flex-col items-center justify-between cursor-pointer 
                                 ${nodeInShortestPath && viewState.currentView === 'parkView' ? 'bg-yellow-300' : ''}
                                 ${nodeParkingColor}
                                 ${viewState.currentView === "editView" && nodeIsSelected ? 'border-2 border-yellow-400': ''}
                                 `} >
-                                    {node}
-                                </button>
+                                    <div className='h-4 text-lg flex justify-center items-center pt-5'>{determineNodeParkedCar(nodeOccupancy, node)}</div>
+                                    {/* <div className='h-8 text-lg'>{'S'}</div> */}
+                                    <div className='text-[0.7rem] h-4'>{node}</div>
+                                </div>
                             );
                         })}
                     </div>

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { dijkstra, findNearestParking, findShortestPath, getDateTimeNow, getEntranceNodes, validateDateFormat } from "../../utils/graphUtils";
-import {  setDistances, setShortestPath } from "../../redux/graphSlice";
+import { blockNodes, dijkstra, findNearestParking, findShortestPath, getDateTimeNow, getEntranceNodes, validateDateFormat } from "../../utils/graphUtils";
+import {  setAdjacencyList, setDistances, setNodeOccupancy, setShortestPath } from "../../redux/graphSlice";
 import { setCurrentView } from "../../redux/viewSlice";
 import { useEffect, useRef, useState } from "react";
 
@@ -41,6 +41,17 @@ const ParkView = () => {
             setDateTimeHelperText('Date format is invalid')
             return;
         }
+
+       const nodeDestination = graph.shortestPath[graph.shortestPath.length-1]
+        dispatch(setNodeOccupancy({
+            action: 'parkCar',
+            node:  nodeDestination,
+            parkedCar: vehicleSize,
+            entryTime: dateInput,
+            carPlate: plateNumberInput
+        }))
+        const updatedAdjacencyList = blockNodes(graph.adjacencyList, [nodeDestination], graph.nodeOccupancy)
+        dispatch(setAdjacencyList(updatedAdjacencyList))
     }
 
     useEffect(()=> {

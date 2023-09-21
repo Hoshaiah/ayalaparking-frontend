@@ -84,6 +84,7 @@ export const findNearestParking = (distances, nodeOccupancy, vehicleSize, priori
                 return ['large'].includes(value.parking)
             }
         })
+        .filter(([key, value]) => nodeOccupancy[key].parkedCar === '')
         .map(([key, value]) => (
             {
                 node: key,
@@ -162,7 +163,7 @@ export const resetNodes = (adjacencyList, nodesToAdd, nodeOccupancy) => {
         ];
         // Step 1: Add adjacent neighbors to node back
         neighbors.forEach(neighbor => {
-            const nodeIsNotBlocked = !runningNodeOccupancy[neighbor] || (runningNodeOccupancy[neighbor].parking && runningNodeOccupancy[neighbor].parking !== 'blocked')
+            const nodeIsNotBlocked = !runningNodeOccupancy[neighbor] || (runningNodeOccupancy[neighbor].parkedCar && !['small','medium','large','blocked'].includes(runningNodeOccupancy[neighbor].parkedCar))
             if(nodeIsNotBlocked && updatedAdjacencyList[neighbor]){
                 if(!updatedAdjacencyList[nodeToAdd].includes(neighbor)){
                     updatedAdjacencyList[nodeToAdd] = [...updatedAdjacencyList[nodeToAdd], neighbor]
@@ -201,30 +202,6 @@ export const turnNodesToParking = (adjacencyList, nodesToDisconnect, nodeOccupan
 }
 
 export const turnNodestoEntrance= (adjacencyList, nodesToDisconnect, nodeOccupancy) => {
-    let updatedAdjacencyList = {...adjacencyList} 
-    let runningNodeOccupancy = {...nodeOccupancy}
-    updatedAdjacencyList = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).updatedAdjacencyList
-    runningNodeOccupancy = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).runningNodeOccupancy
-
-    nodesToDisconnect.forEach( nodeToDisconnect => {
-        const [row, col] = nodeToDisconnect.split('-');
-        const neighbors = [
-            `${parseInt(row, 10) + 1}-${col}`, // Bottom neighbor
-            `${parseInt(row, 10) - 1}-${col}`, // Top neighbor
-            `${row}-${parseInt(col, 10) + 1}`, // Right neighbor
-            `${row}-${parseInt(col, 10) - 1}`  // Left neighbor
-        ];
-
-        neighbors.forEach(neighbor => {
-            if (updatedAdjacencyList[neighbor]) {
-                updatedAdjacencyList[neighbor] = updatedAdjacencyList[neighbor].filter(n => n !== nodeToDisconnect);
-            }
-        });
-    })
-    return updatedAdjacencyList;
-}
-
-export const parkCarOnNode = (adjacencyList, nodesToDisconnect, nodeOccupancy) => {
     let updatedAdjacencyList = {...adjacencyList} 
     let runningNodeOccupancy = {...nodeOccupancy}
     updatedAdjacencyList = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).updatedAdjacencyList
