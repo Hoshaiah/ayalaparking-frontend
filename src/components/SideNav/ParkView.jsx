@@ -30,6 +30,10 @@ const ParkView = () => {
         dispatch(setShortestPath(shortestPath)) 
     }
 
+    const handleParkVehicle = () => {
+
+    }
+
     useEffect(() => {
         const getEntranceNodesList = () => {
             const entranceNodes = getEntranceNodes(graph.nodeOccupancy)
@@ -87,8 +91,10 @@ const ParkView = () => {
                 <h1>Prioritize Cost</h1>
                 <input ref={prioritizeCostInput} type="checkbox" />
             </div>
-            <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleCalculateShortestPaths}>Calculate Nearest Parking</button>
-            {/* <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleFindShortestPath}>Find Shortest Path</button> */}
+            <div className="flex">
+                <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleCalculateShortestPaths}>Calculate Nearest Parking</button>
+                <button className="bg-slate-800 text-white p-1 rounded-sm" onClick={handleParkVehicle}>Park</button>
+            </div>
         </div>
     )
 }
