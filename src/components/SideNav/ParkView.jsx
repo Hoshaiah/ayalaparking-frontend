@@ -54,11 +54,11 @@ const ParkView = () => {
        const nodeDestination = graph.shortestPath[graph.shortestPath.length-1]
        dispatch(setCarHistory({
            action: 'park',
+           carPlate: plateNumberInput,
            node: nodeDestination,
            parkedCar: vehicleSize,
            parkingSize: graph.nodeOccupancy[nodeDestination].parking,
            entryTime: dateInput,
-           carPlate: plateNumberInput
        }))
         dispatch(setNodeOccupancy({
             action: 'parkCar',

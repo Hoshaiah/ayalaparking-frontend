@@ -9,10 +9,11 @@ const UnparkView = () => {
     const dispatch = useDispatch()
     const graph = useSelector(state => state.graph)
     const [parkedCarsSelection, setParkedCarsSelection] = useState([])
-    const [parkedCarInput, setParkedCarInput] = useState(getParkedCarNodes(graph.nodeOccupancy)[0])
+    const [parkedCarInput, setParkedCarInput] = useState()
     const [dateTimeHelperText, setDateTimeHelperText] = useState('')
     const [dateInput, setDateInput]= useState(getDateTimeNow())
     const [receipt, setReceipt] = useState({})
+    const [disabledUnparkButton, setDisabledUnparkButton] = useState(parkedCarsSelection.length > 0)
 
     const handleUnparkCar = () => {
         const isDateValid = validateDateFormat(dateInput)
@@ -22,17 +23,18 @@ const UnparkView = () => {
         }
         
         const numberOfHoursParked = calculateHourDifference(graph.nodeOccupancy[parkedCarInput].entryTime, dateInput)
-        setReceipt(calculateParkingCost(numberOfHoursParked, graph.nodeOccupancy[parkedCarInput].parking))
+        const totalParkingCost = calculateParkingCost(numberOfHoursParked, graph.nodeOccupancy[parkedCarInput].parking)
+        setReceipt(totalParkingCost)
 
         dispatch(setCarHistory({
             action: 'unpark',
+            carPlate: graph.nodeOccupancy[parkedCarInput].carPlate,
             node: parkedCarInput,
             parkedCar: graph.nodeOccupancy[parkedCarInput].parkedCar,
             parkingSize: graph.nodeOccupancy[parkedCarInput].parking,
             entryTime: graph.nodeOccupancy[parkedCarInput].entryTime,
             exitTime: dateInput,
-            carPlate: graph.nodeOccupancy[parkedCarInput].carPlate,
-            totalBill: receipt,
+            totalBill: totalParkingCost.total,
         }))
         dispatch(setNodeOccupancy({
             node: parkedCarInput,
@@ -53,9 +55,21 @@ const UnparkView = () => {
         const getParkedCarsNodesList= () => {
             const parkedCarNodes= getParkedCarNodes(graph.nodeOccupancy)
             setParkedCarsSelection(parkedCarNodes)
+            setParkedCarInput(parkedCarNodes[0])
         }
         getParkedCarsNodesList()
     }, [graph.nodeOccupancy])
+
+    useEffect(() => {
+        const disableUnparkButton = () => {
+           if(parkedCarsSelection.length === 0)  {
+            setDisabledUnparkButton(true)
+           } else {
+            setDisabledUnparkButton(false)
+           }
+        }
+        disableUnparkButton()
+    },[parkedCarsSelection])
 
     return (
         <div>
@@ -88,14 +102,16 @@ const UnparkView = () => {
                 <div>
                 </div>
             </div>
-            <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleUnparkCar}>Unpark</button>
-            <div className="flex flex-col">
-                <h1>{`Number of hours parked: ~ ${Math.ceil(receipt.totalHours)}hrs (${receipt.totalHours}hrs)`}</h1>
-                {receipt.flatHourTotal && <h1>{`First 3 hours: ${receipt.flatHourTotal}`}</h1>}
-                {receipt.fullDayCosts && <h1>{`Number of full days(${receipt.numberOfFullDays}) x 5000: ${receipt.fullDayCosts} `}</h1>}
-                {receipt.continuousTotal && <h1>{`${receipt.continuousHours}hr x ${receipt.parkingSize} parking: ${receipt.continuousTotal} `}</h1>}
-                <h1>{`Total: Php ${receipt.total}`}</h1>
-            </div>
+            <button className={`${disabledUnparkButton ? 'bg-slate-200':'bg-slate-400'} text-black p-1 rounded-sm`} onClick={handleUnparkCar} disabled={disabledUnparkButton}>Unpark</button>
+            {receipt && 
+                <div className="flex flex-col">
+                    <h1>{`Number of hours parked: ~ ${Math.ceil(receipt.totalHours)}hrs (${receipt.totalHours}hrs)`}</h1>
+                    {receipt.flatHourTotal && <h1>{`First 3 hours: ${receipt.flatHourTotal}`}</h1>}
+                    {receipt.fullDayCosts && <h1>{`Number of full days(${receipt.numberOfFullDays}) x 5000: ${receipt.fullDayCosts} `}</h1>}
+                    {receipt.continuousTotal && <h1>{`${receipt.continuousHours}hr x ${receipt.parkingSize} parking: ${receipt.continuousTotal} `}</h1>}
+                    <h1>{`Total: Php ${receipt.total}`}</h1>
+                </div>
+            }
         </div>
     )
 }
