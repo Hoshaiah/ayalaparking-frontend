@@ -8,9 +8,9 @@ const ParkView = () => {
     const dispatch = useDispatch()
     const graph = useSelector(state => state.graph)
     const plateNumberInput = useRef('')
-    const entranceInput = useRef()
-    const prioritizeCostInput = useRef(false)
-    const vehicleSize = useRef('small')
+    const [entranceInput, setEntranceInput] = useState(getEntranceNodes(graph.nodeOccupancy)[0])
+    const [prioritizeCostInput, setPriorityCostInput]= useState(false) 
+    const [vehicleSize, setVehicleSize]= useState('small')
     const [dateInput, setDateInput]= useState(getDateTimeNow())
     const [entranceSelection, setEntranceSelection] = useState([])
 
@@ -21,13 +21,15 @@ const ParkView = () => {
     }
 
     const handleCalculateShortestPaths = () => {
-        const data = dijkstra(graph.adjacencyList, entranceInput.current.value )
+        const data = dijkstra(graph.adjacencyList, entranceInput)
         dispatch(setDistances(data.distances))
         dispatch(setDistances(data.previous))
-        const nearestParking = findNearestParking(data.distances,graph.nodeOccupancy, vehicleSize.current.value, prioritizeCostInput.current.checked)[0]
+        const nearestParking = findNearestParking(data.distances,graph.nodeOccupancy, vehicleSize, prioritizeCostInput)[0]
 
-        const shortestPath = findShortestPath(data.distances, data.previous, entranceInput.current.value, nearestParking.node)
-        dispatch(setShortestPath(shortestPath)) 
+        if(nearestParking) {
+            const shortestPath = findShortestPath(data.distances, data.previous, entranceInput, nearestParking.node)
+            dispatch(setShortestPath(shortestPath)) 
+        }
     }
 
     const handleParkVehicle = () => {
@@ -41,6 +43,13 @@ const ParkView = () => {
         }
         getEntranceNodesList()
     }, [graph.nodeOccupancy])
+
+    useEffect(() => {
+        const refreshShortestPathOnInputChange = () => {
+           dispatch(setShortestPath([])) 
+        }
+        refreshShortestPathOnInputChange()
+    },[entranceInput, vehicleSize, prioritizeCostInput])
     
     return (
         <div>
@@ -52,10 +61,19 @@ const ParkView = () => {
                 ></input>
             </div>
             <div className="flex">
+                <h1>Date and time of entry:</h1>
+                <input
+                    type="datetime-local"
+                    value={dateInput}
+                    onChange={(e) => handleDateInputChange(e)}
+                    step="60" // Set step to 60 seconds (1 minute)
+                />
+            </div>
+            <div className="flex">
                 <h1>Vehicle size:</h1>
                 <select
-                    ref={vehicleSize}
-                    // onChange={setVehicleSize}
+                    value={vehicleSize}
+                    onChange={(e) => setVehicleSize(e.target.value)}
                     className="border p-2 rounded"
                 >
                     {['small','medium','large'].map((item, index) => (
@@ -66,18 +84,10 @@ const ParkView = () => {
                 </select>
             </div>
             <div className="flex">
-                <h1>Date and time of entry:</h1>
-                <input
-                    type="datetime-local"
-                    value={dateInput}
-                    onChange={(e) => handleDateInputChange(e)}
-                    step="60" // Set step to 60 seconds (1 minute)
-                />
-            </div>
-            <div className="flex">
                 <h1>Entrance:</h1>
                 <select
-                    ref={entranceInput}
+                    value={entranceInput}
+                    onChange={e => setEntranceInput(e.target.value)}
                     className="border p-2 rounded"
                 >
                     {entranceSelection.map((item, index) => (
@@ -89,7 +99,7 @@ const ParkView = () => {
             </div>
             <div className="flex">
                 <h1>Prioritize Cost</h1>
-                <input ref={prioritizeCostInput} type="checkbox" />
+                <input value={prioritizeCostInput} onChange={e => setPriorityCostInput(e.target.checked)} type="checkbox" />
             </div>
             <div className="flex">
                 <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleCalculateShortestPaths}>Calculate Nearest Parking</button>
