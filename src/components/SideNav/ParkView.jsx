@@ -17,7 +17,9 @@ const ParkView = () => {
     const [entranceInput, setEntranceInput] = useState(getEntranceNodes(graph.nodeOccupancy)[0])
     const [prioritizeCostInput, setPriorityCostInput]= useState(false) 
     const [vehicleSize, setVehicleSize]= useState('small')
+    const [calculateButtonDisabled, setCalculateButtonDisabled] = useState(false)
     const [parkButtonDisabled, setParkButtonDisabled] = useState(true)
+    const [entranceSelectionHelperText, setEntranceSelectionHelperText] = useState(true)
 
     const handleDateInputChange = (e) => {
         setDateTimeHelperText('')
@@ -97,6 +99,19 @@ const ParkView = () => {
     }
 
     useEffect(()=> {
+        const changeCaculateButtonAvailability= () => {
+            if(entranceSelection.length === 0) {
+                setCalculateButtonDisabled(true)
+                setEntranceSelectionHelperText('No entrance to parking')
+            } else {
+                setCalculateButtonDisabled(false)
+                setEntranceSelectionHelperText('')
+            }
+        }
+        changeCaculateButtonAvailability()
+    },[entranceSelection])
+
+    useEffect(()=> {
         const changeParkButtonAvailability = () => {
             if(graph.shortestPath.length > 0) {
                 setParkButtonDisabled(false)
@@ -174,6 +189,7 @@ const ParkView = () => {
                             </option>
                         ))}
                     </select>
+                    <p className="text-red-700 text-sm">{entranceSelectionHelperText}</p>
                 </div>
                 <div className="flex flex-col items-start w-full px-4 mt-4">
                     <h1 className="font-semibold text-neutral-950">Prioritize Cost</h1>
@@ -185,7 +201,7 @@ const ParkView = () => {
                     />
                 </div>
                 <div className="flex flex-col w-full px-4 mt-4">
-                    <button className="bg-tree text-white font-semibold p-1 rounded-md w-60 h-12 my-2" onClick={handleCalculateShortestPaths}>{graph.shortestPath.length > 0 ?'Recalculate Parking':`Calculate Nearest Parking`}</button>
+                    <button className={`${calculateButtonDisabled ? 'bg-gray-400':'bg-tree'} text-white font-semibold p-1 rounded-md w-60 h-12 my-2"`} onClick={handleCalculateShortestPaths}>{graph.shortestPath.length > 0 ?'Recalculate Parking':`Calculate Nearest Parking`}</button>
                     {!parkButtonDisabled && <button className="bg-pink text-white font-semibold p-1 rounded-md w-60 h-12 my-2" onClick={handleParkVehicle} disabled={parkButtonDisabled}>Park</button>}
                 </div>
             </div>
