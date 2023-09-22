@@ -86,7 +86,6 @@ const UnparkView = () => {
         disableUnparkButton()
     },[parkedCarsSelection])
 
-    console.log(receipt)
     return (
         <div className="h-full mx-1">
             <div className="flex flex-col w-full ml-2 mt-1 text-neutral-100 font-semibold text-md"> {'Unpark car details'}</div>
