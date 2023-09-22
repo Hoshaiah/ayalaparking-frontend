@@ -12,6 +12,10 @@ const EditView = () => {
     const [parkingDisabled, setParkingDisabled] = useState(false)
 
 
+    const handleClearAll = () => {
+        dispatch(removeAllSelectedNodes())
+    }
+
     const handleRemoveSelectedNode = (node) => {
         dispatch(removeToSelectedNodes(node))
     }
@@ -83,7 +87,10 @@ const EditView = () => {
 
     return (
         <div className="h-full mx-1">
-            <div className="flex flex-col w-full mt-1 ml-2 text-neutral-100 font-semibold"> {'Selected nodes'}</div>
+            <div className="flex justify-between w-full">
+                <div className="flex mt-1 ml-2 text-neutral-100 font-semibold"> {'Selected nodes'}</div>
+                {viewState.selectedNodes.length > 0 && <button className="text-neutral-100 text-xs my-1 select-none border-gray-50 border rounded-md px-1 " onClick={()=> handleClearAll()}>Clear all selected</button>}
+            </div>
             <div className="align-start flex flex-wrap space-x-1 h-40 bg-neutral-200 overflow-scroll overflow-x-hidden">
                 {viewState.selectedNodes && viewState.selectedNodes.map((node) => (
                     <div className="flex bg-neutral-50 w-16 h-8 rounded-lg items-center justify-around m-1 border-neutral-900 border">
