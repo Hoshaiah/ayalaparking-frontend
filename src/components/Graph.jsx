@@ -28,21 +28,21 @@ const Graph = () => {
         }
 
         if(nodeOccupancy[node].parking === 'blocked') {
-            return 'bg-black'
+            return 'bg-tree'
         }
 
         if(nodeOccupancy[node].parking === 'small') {
-            return 'bg-pink'
+            return 'bg-saffron'
         }
 
         if(nodeOccupancy[node].parking === 'medium') {
-            return 'bg-green-500'
+            return 'bg-sandy'
         }
         if(nodeOccupancy[node].parking === 'large') {
-            return 'bg-blue-700'
+            return 'bg-pink'
         }
         if(nodeOccupancy[node].entrance === true) {
-            return 'bg-orange-700'
+            return 'bg-teal'
         }
         return ''
     }
