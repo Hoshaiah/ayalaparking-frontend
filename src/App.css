@@ -48,3 +48,7 @@ body::-webkit-scrollbar-track {
 body::-webkit-scrollbar-thumb {
   background-color: transparent; /* Make the thumb (handle) invisible */
 }
+
+.align-start {
+  align-content: flex-start
+}

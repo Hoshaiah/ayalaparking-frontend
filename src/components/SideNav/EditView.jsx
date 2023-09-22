@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { resetNodes, deepCompare, dijkstra, turnNodesToParking, findShortestPath, blockNodes, turnNodestoEntrance, countNumberOfEntrances } from "../../utils/graphUtils";
 import { setAdjacencyList, setNodeOccupancy, setShortestPath } from "../../redux/graphSlice";
-import { removeAllSelectedNodes, setCurrentView } from "../../redux/viewSlice";
+import { removeAllSelectedNodes, removeToSelectedNodes, setCurrentView } from "../../redux/viewSlice";
 import { useEffect, useState } from "react";
 
 const EditView = () => {
@@ -10,6 +10,11 @@ const EditView = () => {
     const graph = useSelector(state => state.graph)
     const [entranceDisabled, setEntranceDisabled] = useState(false)
     const [parkingDisabled, setParkingDisabled] = useState(false)
+
+
+    const handleRemoveSelectedNode = (node) => {
+        dispatch(removeToSelectedNodes(node))
+    }
 
     const handleBlockClick = () => {
         dispatch(setNodeOccupancy({
@@ -79,7 +84,14 @@ const EditView = () => {
     return (
         <div className="h-full mx-1">
             <div className="flex flex-col w-full mt-1 ml-2 text-neutral-100 font-semibold"> {'Selected nodes'}</div>
-            <div className="flex flex-col w-full h-40 items-center bg-neutral-200"></div>
+            <div className="align-start flex flex-wrap space-x-1 h-40 bg-neutral-200 overflow-scroll overflow-x-hidden">
+                {viewState.selectedNodes && viewState.selectedNodes.map((node) => (
+                    <div className="flex bg-neutral-50 w-16 h-8 rounded-lg items-center justify-around m-1 border-neutral-900 border">
+                        <button className="select-none font-semibold text-neutral-700 hover:text-gray-500" onClick={() => handleRemoveSelectedNode(node)}>x</button>
+                       <h1 className="select-none">{node}</h1> 
+                    </div>
+                ))}
+            </div>
             <div className="flex flex-col w-full ml-2 mt-2 text-neutral-100 font-semibold text-md"> {'Edit nodes'}</div>
             <div className="flex flex-col w-full h-full items-center bg-neutral-200">
                 <button className="bg-neutral-50 text-black font-semibold p-1 rounded-md w-40 h-12 mt-4 mb-2" onClick={handleResetClick} >Reset</button>
