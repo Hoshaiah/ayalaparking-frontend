@@ -91,7 +91,7 @@ const EditView = () => {
                 <div className="flex mt-1 ml-2 text-neutral-100 font-semibold"> {'Selected nodes'}</div>
                 {viewState.selectedNodes.length > 0 && <button className="text-neutral-100 text-xs my-1 select-none border-gray-50 border rounded-md px-1 " onClick={()=> handleClearAll()}>Clear all selected</button>}
             </div>
-            <div className="align-start flex flex-wrap space-x-1 h-40 bg-neutral-200 overflow-scroll overflow-x-hidden">
+            <div className="align-start flex flex-wrap space-x-1 h-28 bg-neutral-200 overflow-scroll overflow-x-hidden">
                 {viewState.selectedNodes && viewState.selectedNodes.map((node) => (
                     <div className="flex bg-neutral-50 w-16 h-8 rounded-lg items-center justify-around m-1 border-neutral-900 border">
                         <button className="select-none font-semibold text-neutral-700 hover:text-gray-500" onClick={() => handleRemoveSelectedNode(node)}>x</button>

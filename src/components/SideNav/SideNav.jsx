@@ -3,6 +3,7 @@ import EditView from "./EditView";
 import ParkView from "./ParkView";
 import { setCurrentView } from "../../redux/viewSlice";
 import UnparkView from "./UnparkView";
+import { setShortestPath } from "../../redux/graphSlice";
 
 const SideNav = () => {
     const dispatch = useDispatch()
@@ -12,6 +13,7 @@ const SideNav = () => {
 
     const handleEditClick = () => {
         dispatch(setCurrentView('editView'))
+        dispatch(setShortestPath([]))
     }
 
     const handleParkClick = () => {
@@ -20,10 +22,11 @@ const SideNav = () => {
     
     const handleUnparkClick = () => {
         dispatch(setCurrentView('unparkView'))
+        dispatch(setShortestPath([]))
     }
 
     return (
-        <div className="h-[calc(100vh-36px)] w-[32rem] bg-neutral-500">
+        <div className="h-[calc(100vh-36px)] w-[32rem] bg-neutral-500 overflow-y-scroll">
             <div className="flex bg-neutral-500">
                 <button 
                     className={`w-1/3 p-2 flex items-center justify-center font-bold border-r border-neutral-500

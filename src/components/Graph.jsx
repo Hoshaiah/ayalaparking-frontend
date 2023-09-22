@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToSelectedNodes, removeAllSelectedNodes, removeToSelectedNodes, setCurrentView, setSelectedForUnpark } from '../redux/viewSlice';
 import { deepCompare } from '../utils/graphUtils';
+import { setShortestPath } from '../redux/graphSlice';
 
 const Graph = () => {
     const dispatch = useDispatch()
@@ -18,6 +19,7 @@ const Graph = () => {
 
         if(viewState.currentView !== 'editView'){
             dispatch(setCurrentView('editView'))
+            dispatch(setShortestPath([]))
         }
         if(!nodeIsSelected) {
             dispatch(addToSelectedNodes(node))
@@ -30,25 +32,38 @@ const Graph = () => {
         if(!nodeOccupancy[node]) {
             return ''
         }
-
+        let nodeDesign = ''
         if(nodeOccupancy[node].parking === 'blocked') {
-            return 'bg-tree'
+            nodeDesign += 'bg-tree '
         }
 
         if(nodeOccupancy[node].parking === 'small') {
-            return 'bg-saffron'
+            nodeDesign += 'bg-saffron '
         }
 
         if(nodeOccupancy[node].parking === 'medium') {
-            return 'bg-sandy'
+            nodeDesign += 'bg-sandy '
         }
         if(nodeOccupancy[node].parking === 'large') {
-            return 'bg-pink'
+            nodeDesign += 'bg-pink '
         }
         if(nodeOccupancy[node].entrance === true) {
-            return 'bg-teal'
+            nodeDesign += 'bg-teal '
         }
-        return ''
+
+        const graphShortestPath = graphState.shortestPath || []
+        const destintation = graphShortestPath[graphShortestPath.length-1]
+        const origin = graphShortestPath[0]
+
+        if(destintation && destintation === node){
+            nodeDesign += 'animate-pulse '
+        }
+
+        if(origin && origin === node) {
+            nodeDesign +=' border-4 border-ice '
+        }
+
+       return nodeDesign
     }
 
     const determineNodeParkedCar = (nodeOccupancy, node) => {
@@ -74,7 +89,7 @@ const Graph = () => {
 
     useEffect(() => {
         const mapNodes = () => {
-            const shortestPath = new Set(graphState.shortestPath)
+            const shortestPath = new Set(graphState.shortestPath.slice(1,-1))
             const selectedNodes = new Set(viewState.selectedNodes)
             const nodeOccupancy = graphState.nodeOccupancy
             const adjacencyList = graphState.adjacencyList
