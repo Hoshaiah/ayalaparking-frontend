@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { blockNodes, dijkstra, findNearestParking, findShortestPath, getDateTimeNow, getEntranceNodes, validateDateFormat } from "../../utils/graphUtils";
+import { blockNodes, calculateHourDifference, determineWhichParkingToUse, dijkstra, findNearestParking, findShortestPath, getDateTimeNow, getEntranceNodes, validateDateFormat } from "../../utils/graphUtils";
 import {  setAdjacencyList, setDistances, setNodeOccupancy, setShortestPath } from "../../redux/graphSlice";
 import { setCurrentView } from "../../redux/viewSlice";
 import { useEffect, useRef, useState } from "react";
@@ -51,20 +51,39 @@ const ParkView = () => {
             return;
         }
 
-       const nodeDestination = graph.shortestPath[graph.shortestPath.length-1]
+        const nodeDestination = graph.shortestPath[graph.shortestPath.length-1]
+        let entryTime = dateInput
+        let costPaidAlready = 0
+        let parkingSize = graph.nodeOccupancy[nodeDestination].parking
+
+        const lastUnparkHistory = currentVehicleHistory && currentVehicleHistory[currentVehicleHistory.length-1]
+        console.log(lastUnparkHistory)
+        if (lastUnparkHistory && lastUnparkHistory.action === 'unpark') {
+            const hoursSinceLastExit = calculateHourDifference(currentVehicleHistory[currentVehicleHistory.length-1].exitTime, dateInput)
+            console.log({hoursSinceLastExit})
+            if(hoursSinceLastExit < 1) {
+                entryTime = lastUnparkHistory.entryTime
+                costPaidAlready = lastUnparkHistory.totalBill
+                parkingSize = determineWhichParkingToUse(graph.nodeOccupancy[nodeDestination].parking, lastUnparkHistory.parkingSize)
+            }
+
+        }
+
+
        dispatch(setCarHistory({
            action: 'park',
            carPlate: plateNumberInput,
            node: nodeDestination,
            parkedCar: vehicleSize,
-           parkingSize: graph.nodeOccupancy[nodeDestination].parking,
-           entryTime: dateInput,
+           parkingSize: parkingSize,
+           entryTime: entryTime,
+           costPaidAlready: costPaidAlready,
        }))
         dispatch(setNodeOccupancy({
             action: 'parkCar',
             node:  nodeDestination,
             parkedCar: vehicleSize,
-            entryTime: dateInput,
+            entryTime: entryTime,
             carPlate: plateNumberInput
         }))
         const updatedAdjacencyList = blockNodes(graph.adjacencyList, [nodeDestination], graph.nodeOccupancy)

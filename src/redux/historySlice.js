@@ -16,6 +16,7 @@ const historySlice = createSlice({
                     parkedCar: action.payload.parkedCar,
                     parkingSize: action.payload.parkingSize,
                     entryTime: action.payload.entryTime,
+                    costPaidAlready: action.payload.costPaidAlready,
                     exitTime: action.payload.exitTime,
                     totalBill: action.payload.totalBill
                 }]
@@ -31,6 +32,7 @@ const historySlice = createSlice({
                     parkedCar: action.payload.parkedCar,
                     parkingSize: action.payload.parkingSize,
                     entryTime: action.payload.entryTime,
+                    costPaidAlready: action.payload.costPaidAlready,
                     exitTime: action.payload.exitTime,
                     totalBill: action.payload.totalBill
                 }]

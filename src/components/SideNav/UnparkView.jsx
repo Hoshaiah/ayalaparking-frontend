@@ -8,6 +8,7 @@ import { setCarHistory } from "../../redux/historySlice";
 const UnparkView = () => {
     const dispatch = useDispatch()
     const graph = useSelector(state => state.graph)
+    const history = useSelector(state => state.history)
     const [parkedCarsSelection, setParkedCarsSelection] = useState([])
     const [parkedCarInput, setParkedCarInput] = useState()
     const [dateTimeHelperText, setDateTimeHelperText] = useState('')
@@ -21,19 +22,30 @@ const UnparkView = () => {
             setDateTimeHelperText('Date format is invalid')
             return;
         }
-        
-        const numberOfHoursParked = calculateHourDifference(graph.nodeOccupancy[parkedCarInput].entryTime, dateInput)
-        const totalParkingCost = calculateParkingCost(numberOfHoursParked, graph.nodeOccupancy[parkedCarInput].parking)
-        setReceipt(totalParkingCost)
+    
+        const carPlate = graph.nodeOccupancy[parkedCarInput].carPlate
+        const currentVehicleHistory = history.carHistory[carPlate]
+        const lastParkHistory = currentVehicleHistory && currentVehicleHistory[currentVehicleHistory.length-1]
+        const numberOfHoursParked = calculateHourDifference(lastParkHistory.entryTime, dateInput)
 
+        if(numberOfHoursParked < 0) {
+            setDateTimeHelperText(`Entry time ${lastParkHistory.entryTime} is later than exit time ${dateInput}. This is not possible.`)
+            return;
+        }
+    
+        
+        const totalParkingCost = calculateParkingCost(numberOfHoursParked, graph.nodeOccupancy[parkedCarInput].parking)
+        totalParkingCost['costPaidAlready'] = lastParkHistory.costPaidAlready || 0
+        setReceipt(totalParkingCost)
         dispatch(setCarHistory({
             action: 'unpark',
-            carPlate: graph.nodeOccupancy[parkedCarInput].carPlate,
+            carPlate: carPlate,
             node: parkedCarInput,
             parkedCar: graph.nodeOccupancy[parkedCarInput].parkedCar,
-            parkingSize: graph.nodeOccupancy[parkedCarInput].parking,
-            entryTime: graph.nodeOccupancy[parkedCarInput].entryTime,
+            entryTime: lastParkHistory.entryTime,
             exitTime: dateInput,
+            parkingSize: lastParkHistory.parkingSize,
+            costPaidAlready: lastParkHistory.costPaidAlready,
             totalBill: totalParkingCost.total,
         }))
         dispatch(setNodeOccupancy({
@@ -71,6 +83,7 @@ const UnparkView = () => {
         disableUnparkButton()
     },[parkedCarsSelection])
 
+    console.log(receipt)
     return (
         <div>
             <div className="flex">
@@ -105,7 +118,8 @@ const UnparkView = () => {
                     {receipt.flatHourTotal && <h1>{`First 3 hours: ${receipt.flatHourTotal}`}</h1>}
                     {receipt.fullDayCosts && <h1>{`Number of full days(${receipt.numberOfFullDays}) x 5000: ${receipt.fullDayCosts} `}</h1>}
                     {receipt.continuousTotal && <h1>{`${receipt.continuousHours}hr x ${receipt.parkingSize} parking: ${receipt.continuousTotal} `}</h1>}
-                    <h1>{`Total: Php ${receipt.total}`}</h1>
+                    {receipt.costPaidAlready > 0 && <h1>{`Cost paid from previous: -${receipt.costPaidAlready}`}</h1>}
+                    {receipt.costPaidAlready? <h1>{`Total: Php ${receipt.total - receipt.costPaidAlready}`}</h1> :  <h1>{`Total: Php ${receipt.total}`}</h1> }
                 </div>
             }
         </div>

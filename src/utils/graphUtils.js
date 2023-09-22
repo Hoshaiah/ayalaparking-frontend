@@ -326,6 +326,15 @@ export const calculateParkingCost = (hours, parkingSize) => {
     }
 }
 
+export const determineWhichParkingToUse = (parking1, parking2) => {
+    const sizeOrder = ['small', 'medium', 'large']
+    if (sizeOrder.indexOf(parking1) > sizeOrder.indexOf(parking2)) {
+        return parking1;
+    } else {
+        return parking2;
+    }
+}
+
 export const getDateTimeNow = () => {
     const now = new Date();
     const year = now.getFullYear().toString().padStart(4, '0');
