@@ -15,6 +15,7 @@ const UnparkView = () => {
     const [dateInput, setDateInput]= useState(getDateTimeNow())
     const [receipt, setReceipt] = useState()
     const [disabledUnparkButton, setDisabledUnparkButton] = useState(parkedCarsSelection.length > 0)
+    const [parkedCarHelperText, setParkedCarHelperText] = useState('')
 
     const handleUnparkCar = () => {
         const isDateValid = validateDateFormat(dateInput)
@@ -76,8 +77,10 @@ const UnparkView = () => {
         const disableUnparkButton = () => {
            if(parkedCarsSelection.length === 0)  {
             setDisabledUnparkButton(true)
+            setParkedCarHelperText('No cars are parked')
            } else {
             setDisabledUnparkButton(false)
+            setParkedCarHelperText('')
            }
         }
         disableUnparkButton()
@@ -85,43 +88,51 @@ const UnparkView = () => {
 
     console.log(receipt)
     return (
-        <div>
-            <div className="flex">
-                <h1>Parked Vehicles:</h1>
-                <select
-                    value={parkedCarInput}
-                    onChange={e => setParkedCarInput(e.target.value)}
-                    className="border p-2 rounded"
-                >
-                    {parkedCarsSelection.map((item, index) => (
-                        <option key={index} value={item}>
-                            {item}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div className="flex">
-                <h1>Date and time of exit:</h1>
-                <p>{dateTimeHelperText}</p>
-                <input
-                    type="datetime-local"
-                    value={dateInput}
-                    onChange={(e) => handleDateInputChange(e)}
-                    step="60" // Set step to 60 seconds (1 minute)
-                />
-            </div>
-            <button className={`${disabledUnparkButton ? 'bg-slate-200':'bg-slate-400'} text-black p-1 rounded-sm`} onClick={handleUnparkCar} disabled={disabledUnparkButton}>Unpark</button>
-            {receipt && 
-                <div className="flex flex-col">
-                    <h1>Bill Breakdown</h1>
-                    <h1>{`Number of hours parked: ~ ${Math.ceil(receipt.totalHours)}hrs (${receipt.totalHours}hrs)`}</h1>
-                    {receipt.flatHourTotal && <h1>{`First 3 hours: ${receipt.flatHourTotal}`}</h1>}
-                    {receipt.fullDayCosts && <h1>{`Number of full days(${receipt.numberOfFullDays}) x 5000: ${receipt.fullDayCosts} `}</h1>}
-                    {receipt.continuousTotal && <h1>{`${receipt.continuousHours}hr x ${receipt.parkingSize} parking: ${receipt.continuousTotal} `}</h1>}
-                    {receipt.costPaidAlready > 0 && <h1>{`Cost paid from previous: -${receipt.costPaidAlready}`}</h1>}
-                    {receipt.costPaidAlready? <h1>{`Total: Php ${receipt.total - receipt.costPaidAlready}`}</h1> :  <h1>{`Total: Php ${receipt.total}`}</h1> }
+        <div className="h-full mx-1">
+            <div className="flex flex-col w-full ml-2 mt-1 text-neutral-100 font-semibold text-md"> {'Unpark car details'}</div>
+            <div className="flex flex-col w-full h-full items-center bg-neutral-200">
+                <div className="flex flex-col w-full px-4 mt-4">
+                    <h1 className="font-semibold text-neutral-950">Node to unpark</h1>
+                    <select
+                        value={parkedCarInput}
+                        onChange={e => setParkedCarInput(e.target.value)}
+                        className="border rounded h-10 px-2 w-20"
+                    >
+                        {parkedCarsSelection.map((item, index) => (
+                            <option key={index} value={item}>
+                                {item}
+                            </option>
+                        ))}
+                    </select>
+                    <p className="text-red-700 text-sm">{parkedCarHelperText}</p>
                 </div>
-            }
+                <div className="flex flex-col w-full px-4 mt-4">
+                    <h1 className="font-semibold text-neutral-950">Date and time of exit:</h1>
+                    <p>{dateTimeHelperText}</p>
+                    <input
+                        className="h-10 px-2 w-56 border rounded"
+                        type="datetime-local"
+                        value={dateInput}
+                        onChange={(e) => handleDateInputChange(e)}
+                        step="60" // Set step to 60 seconds (1 minute)
+                    />
+                </div>
+                <div className="flex flex-col w-full px-4 mt-4">
+                    <button className={`${disabledUnparkButton ? 'bg-gray-400':'bg-tree'} text-white font-semibold p-1 rounded-md w-60 h-12 my-2"`} onClick={handleUnparkCar} disabled={disabledUnparkButton}>Unpark</button>
+                </div>
+
+                {receipt && 
+                    <div className="flex flex-col">
+                        <h1>Bill Breakdown</h1>
+                        <h1>{`Number of hours parked: ~ ${Math.ceil(receipt.totalHours)}hrs (${receipt.totalHours}hrs)`}</h1>
+                        {receipt.flatHourTotal && <h1>{`First 3 hours: ${receipt.flatHourTotal}`}</h1>}
+                        {receipt.fullDayCosts && <h1>{`Number of full days(${receipt.numberOfFullDays}) x 5000: ${receipt.fullDayCosts} `}</h1>}
+                        {receipt.continuousTotal && <h1>{`${receipt.continuousHours}hr x ${receipt.parkingSize} parking: ${receipt.continuousTotal} `}</h1>}
+                        {receipt.costPaidAlready > 0 && <h1>{`Cost paid from previous: -${receipt.costPaidAlready}`}</h1>}
+                        {receipt.costPaidAlready? <h1>{`Total: Php ${receipt.total - receipt.costPaidAlready}`}</h1> :  <h1>{`Total: Php ${receipt.total}`}</h1> }
+                    </div>
+                }
+            </div>
         </div>
     )
 }

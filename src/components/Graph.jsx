@@ -94,8 +94,8 @@ const Graph = () => {
                                 ${nodeParkingColor}
                                 ${viewState.currentView === "editView" && nodeIsSelected ? 'border-2 border-yellow-400': ''}
                                 `} >
-                                    <div className='h-4 text-lg flex justify-center items-center pt-4'>{determineNodeParkedCar(nodeOccupancy, node)}</div>
-                                    <div className='text-[0.6rem] h-4'>{node}</div>
+                                    <div className='h-4 text-lg flex justify-center items-center pt-4 select-none'>{determineNodeParkedCar(nodeOccupancy, node)}</div>
+                                    <div className='text-[0.6rem] h-4 select-none'>{node}</div>
                                 </div>
                             );
                         })}
