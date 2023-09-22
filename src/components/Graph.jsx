@@ -32,7 +32,7 @@ const Graph = () => {
         }
 
         if(nodeOccupancy[node].parking === 'small') {
-            return 'bg-red-200'
+            return 'bg-pink'
         }
 
         if(nodeOccupancy[node].parking === 'medium') {
@@ -95,7 +95,6 @@ const Graph = () => {
                                 ${viewState.currentView === "editView" && nodeIsSelected ? 'border-2 border-yellow-400': ''}
                                 `} >
                                     <div className='h-4 text-lg flex justify-center items-center pt-4'>{determineNodeParkedCar(nodeOccupancy, node)}</div>
-                                    {/* <div className='h-8 text-lg'>{'S'}</div> */}
                                     <div className='text-[0.6rem] h-4'>{node}</div>
                                 </div>
                             );
@@ -113,8 +112,10 @@ const Graph = () => {
 
 
     return (
-        <div className="flex flex-row border-black border w-fit h-fit text-xs">
-            {rows}
+        <div className="w-full bg-slate-100 flex justify-center pt-20">
+            <div className="flex flex-row border-black border w-fit h-fit text-xs">
+                {rows}
+            </div>
         </div>
     );
 };

@@ -23,23 +23,23 @@ const SideNav = () => {
     }
 
     return (
-        <div className="h-[calc(100vh-36px)] w-1/3 bg-slate-300">
-            <div className="flex bg-white">
+        <div className="h-[calc(100vh-36px)] w-[32rem] bg-neutral-500">
+            <div className="flex bg-neutral-500">
                 <button 
-                    className={`w-1/3 p-2 flex items-center justify-center rounded-t-xl border-r border-t
-                        ${viewState.currentView === 'editView' ? 'bg-blue-900 text-white': 'bg-white'}`}
+                    className={`w-1/3 p-2 flex items-center justify-center font-bold border-r border-neutral-500
+                        ${viewState.currentView === 'editView' ? 'bg-neutral-500 text-white': 'bg-neutral-200 text-black'}`}
                     onClick={handleEditClick}
                 >Edit</button>
 
                 <button
-                    className={`w-1/3 p-2 flex items-center justify-center rounded-t-xl border-r border-t
-                        ${viewState.currentView === 'parkView' ? 'bg-blue-900 text-white': 'bg-white'}`}
+                    className={`w-1/3 p-2 flex items-center justify-center font-bold border-r border-neutral-500
+                        ${viewState.currentView === 'parkView' ?  'bg-neutral-500 text-white': 'bg-neutral-200 text-black'}`}
                     onClick={handleParkClick}
                 >Park</button>
 
                 <button 
-                    className={`w-1/3 p-2 flex items-center justify-center rounded-t-xl border-r border-t
-                        ${viewState.currentView === 'unparkView' ? 'bg-blue-900 text-white': 'bg-white'}`}
+                    className={`w-1/3 p-2 flex items-center justify-center font-bold
+                        ${viewState.currentView === 'unparkView' ? 'bg-neutral-500 text-white': 'bg-neutral-200 text-black'}`}
                     onClick={handleUnparkClick}
                 >UnPark</button>
             </div>

@@ -39,6 +39,12 @@ const ParkView = () => {
     }
 
     const handleParkVehicle = () => {
+        const isPlateNumberEmpty = plateNumberInput.trim().length === 0
+        if(isPlateNumberEmpty){
+            setPlateNumberHelperText('this is a required field')
+            return;
+        }
+
         const isDateValid = validateDateFormat(dateInput)
         if(!isDateValid) {
             setDateTimeHelperText('Date format is invalid')
@@ -56,11 +62,10 @@ const ParkView = () => {
         let costPaidAlready = 0
         let parkingSize = graph.nodeOccupancy[nodeDestination].parking
 
+        // Check if car exited parking less than an hour ago
         const lastUnparkHistory = currentVehicleHistory && currentVehicleHistory[currentVehicleHistory.length-1]
-        console.log(lastUnparkHistory)
         if (lastUnparkHistory && lastUnparkHistory.action === 'unpark') {
             const hoursSinceLastExit = calculateHourDifference(currentVehicleHistory[currentVehicleHistory.length-1].exitTime, dateInput)
-            console.log({hoursSinceLastExit})
             if(hoursSinceLastExit < 1) {
                 entryTime = lastUnparkHistory.entryTime
                 costPaidAlready = lastUnparkHistory.totalBill
@@ -93,7 +98,7 @@ const ParkView = () => {
 
     useEffect(()=> {
         const changeParkButtonAvailability = () => {
-            if(graph.shortestPath.length > 0 && plateNumberInput.trim().length > 0) {
+            if(graph.shortestPath.length > 0) {
                 setParkButtonDisabled(false)
             } else {
                 setParkButtonDisabled(true)
@@ -118,61 +123,71 @@ const ParkView = () => {
     },[entranceInput, vehicleSize, prioritizeCostInput])
     
     return (
-        <div>
-            <div className="flex">
-                <h1>Plate Number</h1>
-                <p>{plateNumberHelperText}</p>
-                <input
-                    type="text"
-                    value={plateNumberInput}
-                    onChange={e => {setPlateNumberInput(e.target.value); setPlateNumberHelperText('');}}
+        <div className="h-full mx-1">
+            <div className="flex flex-col w-full ml-2 mt-1 text-neutral-100 font-semibold text-md"> {'Park car details'}</div>
+            <div className="flex flex-col w-full h-full items-center bg-neutral-200">
+                <div className="flex flex-col w-full px-4 mt-4">
+                    <h1 className="font-semibold text-neutral-950">Vehicle Plate</h1>
+                    <input
+                        className="h-10 px-2 w-60 border rounded"
+                        type="text"
+                        value={plateNumberInput}
+                        onChange={e => {setPlateNumberInput(e.target.value); setPlateNumberHelperText('');}}
                     ></input>
-            </div>
-            <div className="flex">
-                <h1>Date and time of entry:</h1>
-                <p>{dateTimeHelperText}</p>
-                <input
-                    type="datetime-local"
-                    value={dateInput}
-                    onChange={(e) => handleDateInputChange(e)}
-                    step="60" // Set step to 60 seconds (1 minute)
-                />
-            </div>
-            <div className="flex">
-                <h1>Vehicle size:</h1>
-                <select
-                    value={vehicleSize}
-                    onChange={(e) => setVehicleSize(e.target.value)}
-                    className="border p-2 rounded"
-                >
-                    {['small','medium','large'].map((item, index) => (
-                        <option key={index} value={item}>
-                            {item}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div className="flex">
-                <h1>Entrance:</h1>
-                <select
-                    value={entranceInput}
-                    onChange={e => setEntranceInput(e.target.value)}
-                    className="border p-2 rounded"
-                >
-                    {entranceSelection.map((item, index) => (
-                        <option key={index} value={item}>
-                            {item}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div className="flex">
-                <h1>Prioritize Cost</h1>
-                <input value={prioritizeCostInput} onChange={e => setPriorityCostInput(e.target.checked)} type="checkbox" />
-            </div>
-            <div className="flex">
-                <button className="bg-slate-400 text-black p-1 rounded-sm" onClick={handleCalculateShortestPaths}>Calculate Nearest Parking</button>
-                <button className={`${parkButtonDisabled? 'bg-slate-400' : 'bg-slate-600'} text-white p-1 rounded-sm`} onClick={handleParkVehicle} disabled={parkButtonDisabled}>Park</button>
+                    <p className="text-red-700 text-sm">{plateNumberHelperText}</p>
+                </div>
+                <div className="flex flex-col w-full px-4 mt-4">
+                    <h1 className="font-semibold text-neutral-950">Date and time of entry</h1>
+                    <input
+                        className="h-10 px-2 w-56 border rounded"
+                        type="datetime-local"
+                        value={dateInput}
+                        onChange={(e) => handleDateInputChange(e)}
+                        step="60" // Set step to 60 seconds (1 minute)
+                        />
+                    <p className="text-red-700 text-sm">{dateTimeHelperText}</p>
+                </div>
+                <div className="flex flex-col w-full px-4 mt-4">
+                    <h1 className="font-semibold text-neutral-950">Vehicle size</h1>
+                    <select
+                        value={vehicleSize}
+                        onChange={(e) => setVehicleSize(e.target.value)}
+                        className="border rounded h-10 px-2 w-28"
+                    >
+                        {['small','medium','large'].map((item, index) => (
+                            <option key={index} value={item}>
+                                {item}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="flex flex-col w-full px-4 mt-4">
+                    <h1 className="font-semibold text-neutral-950">Entrance</h1>
+                    <select
+                        value={entranceInput}
+                        onChange={e => setEntranceInput(e.target.value)}
+                        className="border rounded h-10 px-2 w-20"
+                    >
+                        {entranceSelection.map((item, index) => (
+                            <option key={index} value={item}>
+                                {item}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="flex flex-col items-start w-full px-4 mt-4">
+                    <h1 className="font-semibold text-neutral-950">Prioritize Cost</h1>
+                    <input 
+                        value={prioritizeCostInput}
+                        onChange={e => setPriorityCostInput(e.target.checked)}
+                        type="checkbox"
+                        className="ml-1"
+                    />
+                </div>
+                <div className="flex flex-col w-full px-4 mt-4">
+                    <button className="bg-tree text-white font-semibold p-1 rounded-md w-60 h-12 my-2" onClick={handleCalculateShortestPaths}>{graph.shortestPath.length > 0 ?'Recalculate Parking':`Calculate Nearest Parking`}</button>
+                    {!parkButtonDisabled && <button className="bg-pink text-white font-semibold p-1 rounded-md w-60 h-12 my-2" onClick={handleParkVehicle} disabled={parkButtonDisabled}>Park</button>}
+                </div>
             </div>
         </div>
     )

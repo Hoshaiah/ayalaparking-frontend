@@ -27,12 +27,12 @@ function App() {
   
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-3xl font-bold text-blue-400">Hello world</h1>
-      <div className="flex flex-row w-full h-full">
+      <div className='fixed top-0 w-full h-12 bg-gradient-to-r from-pink to-sandy flex items-center pl-4'>
+        <h1 className="text-3xl font-bold text-white">Ayala Parking</h1>
+      </div>
+      <div className="fixed top-12 flex flex-row w-full">
         <SideNav/>
-        <div className="h-[calc(100vh-36px)] w-full bg-slate-100 flex justify-center pt-20 ">
-          <Graph />
-        </div>
+        <Graph />
       </div>
     </div>
   );
