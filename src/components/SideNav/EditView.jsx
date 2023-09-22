@@ -107,11 +107,12 @@ const EditView = () => {
                 <button className="bg-pink text-white font-semibold p-1 rounded-md w-40 h-12 my-2" onClick={() => handleParkingClick('large')}>Large Parking</button>
                 <button className={`${parkingDisabled ? 'bg-gray-400': 'bg-tree'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={handleBlockClick} disabled={parkingDisabled}>Block</button>
                 <button className={`${entranceDisabled ? 'bg-gray-400': 'bg-teal'} text-white font-semibold p-1 rounded-md w-40 h-12 mb-4 mt-2`} onClick={() => handleEntranceClick()} disabled={entranceDisabled}>Entrance</button>
-                <div className="p-3 text-sm text-gray-800">
+                <div className="px-3 pt-1 text-sm text-gray-800">
                     <h1>Notes:</h1>
-                    <ul className="list-disc pl-5">
+                    <ul className="list-disc pl-5 text-xs">
                         <li>There must be at least three entrance blocks present to perform other operations.</li>
                         <li>Entrances may only be put on edges</li>
+                        <li>Nodes with cars parked may not be edited</li>
                     </ul>
                 </div>
             </div>

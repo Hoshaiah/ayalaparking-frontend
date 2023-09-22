@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToSelectedNodes, removeAllSelectedNodes, removeToSelectedNodes, setCurrentView } from '../redux/viewSlice';
+import { addToSelectedNodes, removeAllSelectedNodes, removeToSelectedNodes, setCurrentView, setSelectedForUnpark } from '../redux/viewSlice';
 import { deepCompare } from '../utils/graphUtils';
 
 const Graph = () => {
@@ -12,6 +12,10 @@ const Graph = () => {
     
 
     const handleNodeClick = (node, nodeIsSelected) => {
+        if(graphState.nodeOccupancy[node] && ['small','medium','large'].includes(graphState.nodeOccupancy[node].parkedCar)) {
+            return;
+        }
+
         if(viewState.currentView !== 'editView'){
             dispatch(setCurrentView('editView'))
         }
