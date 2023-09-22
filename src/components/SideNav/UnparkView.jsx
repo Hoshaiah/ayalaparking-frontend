@@ -117,7 +117,7 @@ const UnparkView = () => {
                     />
                 </div>
                 <div className="flex flex-col w-full px-4 mt-4">
-                    <button className={`${disabledUnparkButton ? 'bg-gray-400':'bg-tree'} text-white font-semibold p-1 rounded-md w-60 h-12 my-2"`} onClick={handleUnparkCar} disabled={disabledUnparkButton}>Unpark</button>
+                    <button className={`${disabledUnparkButton ? 'bg-gray-400':'bg-olive hover:opacity-90'} text-white font-semibold p-1 rounded-md w-60 h-12 my-2"`} onClick={handleUnparkCar} disabled={disabledUnparkButton}>Unpark</button>
                 </div>
 
                 {receipt && 

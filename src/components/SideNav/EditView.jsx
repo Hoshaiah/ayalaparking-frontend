@@ -101,12 +101,12 @@ const EditView = () => {
             </div>
             <div className="flex flex-col w-full ml-2 mt-2 text-neutral-100 font-semibold text-md"> {'Edit nodes'}</div>
             <div className="flex flex-col w-full h-full items-center bg-neutral-200 overflow-y-scroll overflow-x-hidden"> 
-                <button className={`${editDisabled? 'bg-gray-400 text-white': 'bg-neutral-50'} text-black font-semibold p-1 rounded-md w-40 h-12 mt-4 mb-2`} onClick={handleResetClick} disabled={editDisabled} >Reset</button>
-                <button className={`${editDisabled? 'bg-gray-400': 'bg-saffron'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={() => handleParkingClick('small')} disabled={editDisabled} >Small Parking</button>
-                <button className={`${editDisabled? 'bg-gray-400':'bg-sandy'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={() => handleParkingClick('medium')} disabled={editDisabled} >Medium Parking</button>
-                <button className={`${editDisabled? 'bg-gray-400': 'bg-pink'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={() => handleParkingClick('large')} disabled={editDisabled} >Large Parking</button>
-                <button className={`${editDisabled ? 'bg-gray-400': 'bg-tree'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={handleBlockClick} disabled={editDisabled}>Block</button>
-                <button className={`${entranceDisabled ? 'bg-gray-400': 'bg-teal'} text-white font-semibold p-1 rounded-md w-40 h-12 mb-4 mt-2`} onClick={() => handleEntranceClick()} disabled={entranceDisabled}>Entrance</button>
+                <button className={`${editDisabled? 'bg-gray-400 text-white': 'bg-neutral-100 hover:opacity-90'} text-black font-semibold p-1 rounded-md w-40 h-12 mt-4 mb-2`} onClick={handleResetClick} disabled={editDisabled} >Reset</button>
+                <button className={`${editDisabled? 'bg-gray-400': 'bg-saffron hover:opacity-90'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={() => handleParkingClick('small')} disabled={editDisabled} >Small Parking</button>
+                <button className={`${editDisabled? 'bg-gray-400':'bg-sandy hover:opacity-90'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={() => handleParkingClick('medium')} disabled={editDisabled} >Medium Parking</button>
+                <button className={`${editDisabled? 'bg-gray-400': 'bg-pink hover:opacity-90'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={() => handleParkingClick('large')} disabled={editDisabled} >Large Parking</button>
+                <button className={`${editDisabled ? 'bg-gray-400': 'bg-tree hover:opacity-90'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={handleBlockClick} disabled={editDisabled}>Block</button>
+                <button className={`${entranceDisabled ? 'bg-gray-400': 'bg-teal hover:opacity-90'} text-white font-semibold p-1 rounded-md w-40 h-12 mb-4 mt-2`} onClick={() => handleEntranceClick()} disabled={entranceDisabled}>Entrance</button>
                 <div className="px-3 pt-1 text-sm text-gray-800">
                     <h1>Notes:</h1>
                     <ul className="list-disc pl-5 text-xs">

@@ -144,6 +144,7 @@ const ParkView = () => {
                 <div className="flex flex-col w-full px-4 mt-4">
                     <h1 className="font-semibold text-neutral-950">Vehicle Plate</h1>
                     <input
+                        placeholder="Any plate # format"
                         className="h-10 px-2 w-60 border rounded"
                         type="text"
                         value={plateNumberInput}
@@ -201,8 +202,8 @@ const ParkView = () => {
                     />
                 </div>
                 <div className="flex flex-col w-full px-4 mt-4">
-                    <button className={`${calculateButtonDisabled ? 'bg-gray-400':'bg-tree'} text-white font-semibold p-1 rounded-md w-60 h-12 my-2"`} onClick={handleCalculateShortestPaths}>{graph.shortestPath.length > 0 ?'Recalculate Parking':`Calculate Nearest Parking`}</button>
-                    {!parkButtonDisabled && <button className="bg-pink text-white font-semibold p-1 rounded-md w-60 h-12 my-2" onClick={handleParkVehicle} disabled={parkButtonDisabled}>Park</button>}
+                    <button className={`${calculateButtonDisabled ? 'bg-gray-400':'bg-tree hover:opacity-90'} text-white font-semibold p-1 rounded-md w-60 h-12 my-2"`} onClick={handleCalculateShortestPaths} disabled={calculateButtonDisabled}>{graph.shortestPath.length > 0 ?'Recalculate Parking':`Calculate Nearest Parking`} </button>
+                    {!parkButtonDisabled && <button className="bg-pink hover:opacity-90 text-white font-semibold p-1 rounded-md w-60 h-12 my-2" onClick={handleParkVehicle} disabled={parkButtonDisabled}>Park</button>}
                 </div>
             </div>
         </div>
