@@ -13,7 +13,8 @@ module.exports = {
         tree: '#344229',
         mellow: '#FFE476',
         teal: '#5bbdaf',
-        saffron: '#EFC932'
+        saffron: '#EFC932',
+        ice: '#9DF7E5'
       },
     },
   },

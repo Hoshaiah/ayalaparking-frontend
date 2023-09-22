@@ -92,9 +92,9 @@ const Graph = () => {
                                 <div onClick={() => {handleNodeClick(node, nodeIsSelected)}} key={node} className={`border-black border w-10 h-10 flex flex-col items-center justify-between cursor-pointer 
                                 ${nodeInShortestPath && viewState.currentView === 'parkView' ? 'bg-yellow-300' : ''}
                                 ${nodeParkingColor}
-                                ${viewState.currentView === "editView" && nodeIsSelected ? 'border-2 border-yellow-400': ''}
+                                ${viewState.currentView === "editView" && nodeIsSelected ? 'border-ice border-4': ''}
                                 `} >
-                                    <div className='h-4 text-lg flex justify-center items-center pt-4 select-none'>{determineNodeParkedCar(nodeOccupancy, node)}</div>
+                                    <div className='h-4 text-lg flex justify-center items-center pt-[8px] select-none'>{determineNodeParkedCar(nodeOccupancy, node)}</div>
                                     <div className='text-[0.6rem] h-4 select-none'>{node}</div>
                                 </div>
                             );
