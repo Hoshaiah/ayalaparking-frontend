@@ -28,26 +28,25 @@ const HistoryPane = () => {
     return(
         <div className=" w-[32rem] bg-neutral-500 overflow-scroll p-0">
             <div className="flex flex-col w-full">
-                <div className="flex items-center bg-neutral-100 font-bold w-full h-10">
+                <div className="flex items-center bg-neutral-200 font-bold w-full h-10">
                     <h1 className="bg-neutral-500 h-full p-2 text-neutral-100">Vehicle history</h1>
                 </div>
-                <select
-                    value={carSelected}
-                    onChange={e => setCarSelected(e.target.value)}
-                    className="border rounded h-10 px-2 mx-4 w-20"
-                >
-                    {carSelection.map((item, index) => (
-                        <option key={index} value={item}>
-                            {item}
-                        </option>
-                    ))}
-                </select>
-                <button
-      onClick={handleClickSort}
-      className="flex items-center bg-blue-500 text-white py-2 px-4 rounded-md focus:outline-none"
-    >
-      Sort {sortDescending ? '↓' : '↑'}
-    </button>
+                <div className="flex items-end pt-2 ">
+                    <select
+                        value={carSelected}
+                        onChange={e => setCarSelected(e.target.value)}
+                        className="border rounded h-10 px-2 mx-4 w-20"
+                    >
+                        {carSelection.map((item, index) => (
+                            <option key={index} value={item}>
+                                {item}
+                            </option>
+                        ))}
+                    </select>
+                    <button onClick={handleClickSort} className="flex items-center justify-center border-white border text-white h-8 px-1 w-32 rounded-md text-xs">
+                        {sortDescending ? ' Most recent ↓' : 'From first ↑'}
+                    </button>
+                </div>
             </div>
             <div className="flex flex-col w-full h-full px-3 mt-4 pb-4">
                 {carSelected !== '' && history.carHistory[carSelected] &&
