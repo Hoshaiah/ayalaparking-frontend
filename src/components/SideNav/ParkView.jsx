@@ -169,7 +169,7 @@ const ParkView = () => {
                         type="datetime-local"
                         value={dateInput}
                         onChange={(e) => handleDateInputChange(e)}
-                        step="60" // Set step to 60 seconds (1 minute)
+                        step="60" 
                         />
                     <p className="text-red-700 text-sm">{dateTimeHelperText}</p>
                 </div>
