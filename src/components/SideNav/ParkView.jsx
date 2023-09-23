@@ -54,7 +54,8 @@ const ParkView = () => {
         }
 
         const currentVehicleHistory = history.carHistory[plateNumberInput]
-        if (currentVehicleHistory && currentVehicleHistory[currentVehicleHistory.length-1].action === 'park') {
+        const lastUnparkHistory = currentVehicleHistory && currentVehicleHistory[currentVehicleHistory.length-1]
+        if (lastUnparkHistory && lastUnparkHistory.action === 'park') {
             setPlateNumberHelperText('This car is already parked!')
             return;
         }
@@ -65,15 +66,18 @@ const ParkView = () => {
         let parkingSize = graph.nodeOccupancy[nodeDestination].parking
 
         // Check if car exited parking less than an hour ago
-        const lastUnparkHistory = currentVehicleHistory && currentVehicleHistory[currentVehicleHistory.length-1]
         if (lastUnparkHistory && lastUnparkHistory.action === 'unpark') {
-            const hoursSinceLastExit = calculateHourDifference(currentVehicleHistory[currentVehicleHistory.length-1].exitTime, dateInput)
+            const hoursSinceLastExit = calculateHourDifference(lastUnparkHistory.exitTime, dateInput)
+            console.log(hoursSinceLastExit)
+            if(hoursSinceLastExit < 0) {
+                setDateTimeHelperText(`You last exit time ${lastUnparkHistory.exitTime} is later than your current set entry time ${dateInput}. This is not possible.`)
+                return;
+            }
             if(hoursSinceLastExit < 1) {
                 entryTime = lastUnparkHistory.entryTime
                 costPaidAlready = lastUnparkHistory.totalBill
                 parkingSize = determineWhichParkingToUse(graph.nodeOccupancy[nodeDestination].parking, lastUnparkHistory.parkingSize)
             }
-
         }
 
 

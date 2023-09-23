@@ -14,10 +14,10 @@ const UnparkView = () => {
     const [dateTimeHelperText, setDateTimeHelperText] = useState('')
     const [dateInput, setDateInput]= useState(getDateTimeNow())
     const [receipt, setReceipt] = useState()
-    const [disabledUnparkButton, setDisabledUnparkButton] = useState(parkedCarsSelection.length > 0)
+    const [disableCalculateButton, setDisableCalculateButton] = useState(parkedCarsSelection.length > 0)
     const [parkedCarHelperText, setParkedCarHelperText] = useState('')
 
-    const handleUnparkCar = () => {
+    const handleCalculateParkingCost = () => {
         const isDateValid = validateDateFormat(dateInput)
         if(!isDateValid) {
             setDateTimeHelperText('Date format is invalid')
@@ -33,21 +33,34 @@ const UnparkView = () => {
             setDateTimeHelperText(`Entry time ${lastParkHistory.entryTime} is later than exit time ${dateInput}. This is not possible.`)
             return;
         }
+
+        const lastUnParkHistory = currentVehicleHistory && currentVehicleHistory[currentVehicleHistory.length-2]
+        const differenceBetweenCurrentAndPreviousExit = lastUnParkHistory && calculateHourDifference(lastUnParkHistory.exitTime, dateInput)
+        if(differenceBetweenCurrentAndPreviousExit < 0) {
+            setDateTimeHelperText(`Your last exit time ${lastUnParkHistory.exitTime} is later than your current exit time ${dateInput}. This is not possible my friend.`)
+            return;
+        }
     
-        
-        const totalParkingCost = calculateParkingCost(numberOfHoursParked, graph.nodeOccupancy[parkedCarInput].parking)
-        totalParkingCost['costPaidAlready'] = lastParkHistory.costPaidAlready || 0
-        setReceipt(totalParkingCost)
+        const totalParkingBreakdown = calculateParkingCost(numberOfHoursParked, lastParkHistory.parkingSize)
+        totalParkingBreakdown['costPaidAlready'] = lastParkHistory.costPaidAlready || 0
+        totalParkingBreakdown['carPlate'] = carPlate
+        totalParkingBreakdown['entryTime'] = lastParkHistory.entryTime
+        totalParkingBreakdown['exitTime'] = dateInput
+        totalParkingBreakdown['parkingSize'] = lastParkHistory.parkingSize
+        setReceipt(totalParkingBreakdown)
+    }
+
+    const handleUnparkCar = () => {
         dispatch(setCarHistory({
             action: 'unpark',
-            carPlate: carPlate,
+            carPlate: receipt.carPlate,
             node: parkedCarInput,
             parkedCar: graph.nodeOccupancy[parkedCarInput].parkedCar,
-            entryTime: lastParkHistory.entryTime,
+            entryTime: receipt.entryTime,
             exitTime: dateInput,
-            parkingSize: lastParkHistory.parkingSize,
-            costPaidAlready: lastParkHistory.costPaidAlready,
-            totalBill: totalParkingCost.total,
+            parkingSize: receipt.parkingSize,
+            costPaidAlready: receipt.costPaidAlready,
+            totalBill: receipt.total,
         }))
         dispatch(setNodeOccupancy({
             node: parkedCarInput,
@@ -76,20 +89,34 @@ const UnparkView = () => {
     useEffect(() => {
         const disableUnparkButton = () => {
            if(parkedCarsSelection.length === 0)  {
-            setDisabledUnparkButton(true)
+            setDisableCalculateButton(true)
             setParkedCarHelperText('No cars are parked')
            } else {
-            setDisabledUnparkButton(false)
+            setDisableCalculateButton(false)
             setParkedCarHelperText('')
            }
         }
         disableUnparkButton()
     },[parkedCarsSelection])
 
+    useEffect(() => {
+        const refreshReceipt = () => {
+            setReceipt(null)
+        }
+        refreshReceipt()
+    }, [parkedCarInput, dateInput])
+
+    useEffect(() => {
+        const refreshDateHelperTextOnNodeChange = () => {
+            setDateTimeHelperText('')
+        }
+        refreshDateHelperTextOnNodeChange()
+    }, [parkedCarInput, dateInput])
+
     return (
-        <div className="h-full mx-1">
+        <div className="h-full mx-1 overflow-y-scroll">
             <div className="flex flex-col w-full ml-2 mt-1 text-neutral-100 font-semibold text-md"> {'Unpark car details'}</div>
-            <div className="flex flex-col w-full h-full items-center bg-neutral-200">
+            <div className={`flex flex-col w-full ${receipt ? 'h-64':'h-full'} items-center bg-neutral-200`}>
                 <div className="flex flex-col w-full px-4 mt-4">
                     <h1 className="font-semibold text-neutral-950">Node to unpark</h1>
                     <select
@@ -107,7 +134,6 @@ const UnparkView = () => {
                 </div>
                 <div className="flex flex-col w-full px-4 mt-4">
                     <h1 className="font-semibold text-neutral-950">Date and time of exit:</h1>
-                    <p>{dateTimeHelperText}</p>
                     <input
                         className="h-10 px-2 w-56 border rounded"
                         type="datetime-local"
@@ -115,23 +141,74 @@ const UnparkView = () => {
                         onChange={(e) => handleDateInputChange(e)}
                         step="60" // Set step to 60 seconds (1 minute)
                     />
+                    <p className="text-red-700 text-sm" >{dateTimeHelperText}</p>
                 </div>
-                <div className="flex flex-col w-full px-4 mt-4">
-                    <button className={`${disabledUnparkButton ? 'bg-gray-400':'bg-olive hover:opacity-90'} text-white font-semibold p-1 rounded-md w-60 h-12 my-2"`} onClick={handleUnparkCar} disabled={disabledUnparkButton}>Unpark</button>
+                <div className="flex flex-col w-full px-4 mt-6">
+                    <button className={`${disableCalculateButton ? 'bg-gray-400':'bg-tree hover:opacity-90'} text-white font-semibold p-1 rounded-md w-40 h-12 mb-4 mt-6"`} onClick={handleCalculateParkingCost} disabled={disableCalculateButton}>Calculate Costs</button>
                 </div>
 
-                {receipt && 
-                    <div className="flex flex-col">
-                        <h1>Bill Breakdown</h1>
-                        <h1>{`Number of hours parked: ~ ${Math.ceil(receipt.totalHours)}hrs (${receipt.totalHours}hrs)`}</h1>
-                        {receipt.flatHourTotal && <h1>{`First 3 hours: ${receipt.flatHourTotal}`}</h1>}
-                        {receipt.fullDayCosts && <h1>{`Number of full days(${receipt.numberOfFullDays}) x 5000: ${receipt.fullDayCosts} `}</h1>}
-                        {receipt.continuousTotal && <h1>{`${receipt.continuousHours}hr x ${receipt.parkingSize} parking: ${receipt.continuousTotal} `}</h1>}
-                        {receipt.costPaidAlready > 0 && <h1>{`Cost paid from previous: -${receipt.costPaidAlready}`}</h1>}
-                        {receipt.costPaidAlready? <h1>{`Total: Php ${receipt.total - receipt.costPaidAlready}`}</h1> :  <h1>{`Total: Php ${receipt.total}`}</h1> }
-                    </div>
-                }
             </div>
+            {receipt && 
+                <div className="flex flex-col h-full">
+                    <div className="flex flex-col w-full ml-2 mt-1 text-neutral-100 font-semibold text-md"> {'Bill Breakdown'}</div>
+                    <div className="flex flex-col w-full h-full p-5 bg-neutral-200">
+                        <div className="flex">
+                            <h1 className="font-semibold text-neutral-950">Vehicle Plate:</h1>
+                            <h1 className="ml-2"> {`${receipt.carPlate}`}</h1>
+                        </div>
+                        <div className="flex">
+                            <h1 className="font-semibold text-neutral-950">Entry:</h1>
+                            <h1 className="ml-2"> {`${receipt.entryTime}`}</h1>
+                        </div>
+                        <div className="flex">
+                            <h1 className="font-semibold text-neutral-950">Exit:</h1>
+                            <h1 className="ml-2"> {`${receipt.exitTime}`}</h1>
+                        </div>
+                        <div className="flex">
+                            <h1 className="font-semibold text-neutral-950">Number of hours parked:</h1>
+                            <h1 className="ml-2"> {`~${Math.ceil(receipt.totalHours)}hrs (${receipt.totalHours}hrs)`}</h1>
+                        </div>
+                        <div className="flex w-full flex-col">
+                            <h1 className="font-semibold w-full text-neutral-950">Cost Breakdown:</h1>
+                            <div className="flex flex-col pr-16 pl-6 mt-4 text-sm w-full">
+                                {receipt.flatHourTotal && <div className="flex justify-between w-full">
+                                    <h1 className="w-32">{`First 3 hours`}</h1>
+                                    <h1 className="w-fit">{`${receipt.flatHourTotal}`}</h1>
+                                </div>}
+                                {receipt.fullDayCosts && <div className="flex justify-between w-full">
+                                    <h1 className="w-32">{`Number of full days(${receipt.numberOfFullDays}) x 5000`}</h1>
+                                    <h1>{`${receipt.fullDayCosts}`}</h1>
+                                </div>}
+                                {receipt.continuousTotal > 0 && <div className="flex justify-between w-full">
+                                    <h1 className="w-32">{`${receipt.continuousHours}hr x ${receipt.parkingSize} parking`}</h1>
+                                    <h1 className="w-fit">{`${receipt.continuousTotal}`}</h1>
+                                </div>}
+                                <div className="border-b border-gray-900"></div>
+                                <div className="flex justify-between w-full">
+                                    <h1 className="w-32">{`Total`}</h1>
+                                    <h1 className="w-fit">{`Php ${receipt.total}`}</h1>
+                                </div>
+                                {receipt.costPaidAlready > 0 && 
+                                    <div className="">
+                                        <div className="flex justify-between">
+                                            <h1 className="w-32">{`Cost paid already`}</h1>
+                                            <h1 className="w-fit">{`- ${receipt.costPaidAlready}`}</h1>
+                                        </div>
+                                        <div className="border-b border-gray-900"></div>
+                                        <div className="flex justify-between">
+                                            <h1 className="w-32">{`Total Cost - Cost paid`}</h1>
+                                            <h1 className="w-fit">{`Php ${receipt.total - receipt.costPaidAlready}`}</h1>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div className="flex flex-col w-full items-end pr-14">
+                            <button className={`bg-pink hover:opacity-90 text-white font-semibold p-1 rounded-md w-40 h-12 mb-4 mt-6`} onClick={handleUnparkCar}>Unpark Car</button>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     )
 }
