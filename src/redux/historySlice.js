@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const historySlice = createSlice({
   name: "history",
   initialState: {
-    carHistory: {},
+    carHistory: JSON.parse(localStorage.getItem('carHistory')) || {},
   },
   reducers: {
     setCarHistory: (state, action) => {

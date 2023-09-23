@@ -1,16 +1,18 @@
 // src/redux/counterSlice.js
 import { createSlice } from "@reduxjs/toolkit";
+import { createAdjacencyList } from "../utils/graphUtils";
+
 
 const graphSlice = createSlice({
   name: "graph",
   initialState: {
-    graphSize: 0,
-    originalAdjacencyList: {},
-    adjacencyList: {},
+    graphSize: 15,
+    originalAdjacencyList: createAdjacencyList(15),
+    adjacencyList: JSON.parse(localStorage.getItem('adjacencyList')) || createAdjacencyList(15),
     distances: {},
     previous: {},
     shortestPath: [],
-    nodeOccupancy: {}
+    nodeOccupancy: JSON.parse(localStorage.getItem('nodeOccupancy')) || {}
   },
   reducers: {
     setGraphSize: (state, action) => {
