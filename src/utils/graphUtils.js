@@ -70,8 +70,9 @@ export const resetNodes = (adjacencyList, nodesToAdd, nodeOccupancy) => {
 export const turnNodesToParking = (adjacencyList, nodesToDisconnect, nodeOccupancy) => {
     let updatedAdjacencyList = {...adjacencyList} 
     let runningNodeOccupancy = {...nodeOccupancy}
-    updatedAdjacencyList = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).updatedAdjacencyList
-    runningNodeOccupancy = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).runningNodeOccupancy
+    const resetNodesData = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy)
+    updatedAdjacencyList = resetNodesData.updatedAdjacencyList
+    runningNodeOccupancy = resetNodesData.runningNodeOccupancy
 
     nodesToDisconnect.forEach(nodeToDisconnect => {
         updatedAdjacencyList[nodeToDisconnect] = []
@@ -82,8 +83,9 @@ export const turnNodesToParking = (adjacencyList, nodesToDisconnect, nodeOccupan
 export const turnNodestoEntrance= (adjacencyList, nodesToDisconnect, nodeOccupancy) => {
     let updatedAdjacencyList = {...adjacencyList} 
     let runningNodeOccupancy = {...nodeOccupancy}
-    updatedAdjacencyList = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).updatedAdjacencyList
-    runningNodeOccupancy = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy).runningNodeOccupancy
+    const resetNodesData = resetNodes(updatedAdjacencyList, nodesToDisconnect, runningNodeOccupancy)
+    updatedAdjacencyList = resetNodesData.updatedAdjacencyList
+    runningNodeOccupancy = resetNodesData.runningNodeOccupancy
 
     nodesToDisconnect.forEach( nodeToDisconnect => {
         const [row, col] = nodeToDisconnect.split('-');
