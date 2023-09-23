@@ -173,7 +173,7 @@ const UnparkView = () => {
                             <div className="flex flex-col pr-16 pl-6 mt-4 text-sm w-full">
                                 {receipt.flatHourTotal && <div className="flex justify-between w-full">
                                     <h1 className="w-28">{`First 3 hours`}</h1>
-                                    <h1 className="w-16 flex justify-end">{`${receipt.flatHourTotal}`}</h1>
+                                    <h1 className="w-24 flex justify-end">{`${receipt.flatHourTotal}`}</h1>
                                 </div>}
                                 {receipt.fullDayCosts && <div className="flex justify-between w-full">
                                     <h1 className="w-28">{`Number of full days(${receipt.numberOfFullDays}) x 5000`}</h1>
@@ -185,8 +185,8 @@ const UnparkView = () => {
                                 </div>}
                                 <div className="border-b border-gray-900"></div>
                                 <div className="flex justify-between w-full">
-                                    <h1 className="w-28">{`Total`}</h1>
-                                    <h1 className="w-16 flex justify-end">{`Php ${receipt.total}`}</h1>
+                                    <h1 className="w-fit">{`Total`}</h1>
+                                    <h1 className="w-32 flex justify-end">{`Php ${receipt.total}`}</h1>
                                 </div>
                                 {receipt.costPaidAlready > 0 && 
                                     <div className="">
@@ -196,8 +196,8 @@ const UnparkView = () => {
                                         </div>
                                         <div className="border-b border-gray-900"></div>
                                         <div className="flex justify-between">
-                                            <h1 className="w-28">{`Total Cost - Cost paid`}</h1>
-                                            <h1 className="w-16 flex justify-end">{`Php ${receipt.total - receipt.costPaidAlready}`}</h1>
+                                            <h1 className="w-28">{`New Total`}</h1>
+                                            <h1 className="w-28 flex justify-end">{`Php ${receipt.total - receipt.costPaidAlready}`}</h1>
                                         </div>
                                     </div>
                                 }
