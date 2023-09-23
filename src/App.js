@@ -1,15 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
-import { createAdjacencyList, dijkstra, findShortestPath, blockNodes } from './utils/graphUtils';
 import Graph from './components/Graph';
-import { useDispatch, useSelector } from 'react-redux';
-import { setAdjacencyList, setGraphSize, setNodeOccupancy, setOriginalAdjacencyList, setShortestPath } from './redux/graphSlice';
+import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import SideNav from './components/SideNav/SideNav';
-import { setCarHistory } from './redux/historySlice';
 import HistoryPane from './components/History/HistoryPane';
 function App() {
-  const dispatch = useDispatch()
   const graphState = useSelector(state => state.graph)
   const history = useSelector(state => state.history)
 

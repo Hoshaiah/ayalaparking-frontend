@@ -1,9 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
-import { setCarHistory } from "../../redux/historySlice";
-import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 const HistoryPane = () => {
-    const dispatch = useDispatch()
     const history = useSelector(state => state.history)
     const [carSelection, setCarSelection] = useState([''])
     const [carSelected, setCarSelected] = useState()

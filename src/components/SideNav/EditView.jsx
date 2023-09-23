@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { resetNodes, deepCompare, dijkstra, turnNodesToParking, findShortestPath, blockNodes, turnNodestoEntrance, countNumberOfEntrances } from "../../utils/graphUtils";
-import { setAdjacencyList, setNodeOccupancy, setShortestPath } from "../../redux/graphSlice";
-import { removeAllSelectedNodes, removeToSelectedNodes, setCurrentView } from "../../redux/viewSlice";
+import { resetNodes, turnNodesToParking, blockNodes, turnNodestoEntrance, countNumberOfEntrances } from "../../utils/graphUtils";
+import { setAdjacencyList, setNodeOccupancy } from "../../redux/graphSlice";
+import { removeAllSelectedNodes, removeToSelectedNodes } from "../../redux/viewSlice";
 import { useEffect, useState } from "react";
 
 const EditView = () => {

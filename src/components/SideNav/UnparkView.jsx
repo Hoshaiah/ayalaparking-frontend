@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { calculateHourDifference, calculateParkingCost, dijkstra, findShortestPath, getDateTimeNow, getParkedCarNodes, turnNodesToParking, validateDateFormat } from "../../utils/graphUtils";
-import {  setAdjacencyList, setNodeOccupancy, setShortestPath } from "../../redux/graphSlice";
-import { setCurrentView } from "../../redux/viewSlice";
+import { getParkedCarNodes, turnNodesToParking } from "../../utils/graphUtils";
+import { calculateHourDifference, calculateParkingCost, getDateTimeNow, validateDateFormat } from "../../utils/parkingUtils";
+import { setAdjacencyList, setNodeOccupancy } from "../../redux/graphSlice";
 import { useState, useEffect } from "react";
 import { setCarHistory } from "../../redux/historySlice";
 

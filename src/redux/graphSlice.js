@@ -1,6 +1,6 @@
 // src/redux/counterSlice.js
 import { createSlice } from "@reduxjs/toolkit";
-import { createAdjacencyList } from "../utils/graphUtils";
+import { createAdjacencyList } from "../utils/algorithmUtils";
 
 
 const graphSlice = createSlice({

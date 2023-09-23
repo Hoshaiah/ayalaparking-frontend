@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { blockNodes, calculateHourDifference, determineWhichParkingToUse, dijkstra, findNearestParking, findShortestPath, getDateTimeNow, getEntranceNodes, validateDateFormat } from "../../utils/graphUtils";
+import { blockNodes, getEntranceNodes } from "../../utils/graphUtils";
+import { dijkstra, findShortestPath, findNearestParking} from "../../utils/algorithmUtils";
+import { calculateHourDifference, determineWhichParkingToUse, getDateTimeNow, validateDateFormat } from "../../utils/parkingUtils";
 import {  setAdjacencyList, setDistances, setNodeOccupancy, setShortestPath } from "../../redux/graphSlice";
-import { setCurrentView } from "../../redux/viewSlice";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { setCarHistory } from "../../redux/historySlice";
 
 const ParkView = () => {

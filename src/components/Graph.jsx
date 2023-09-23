@@ -1,8 +1,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToSelectedNodes, removeAllSelectedNodes, removeToSelectedNodes, setCurrentView, setSelectedForUnpark } from '../redux/viewSlice';
-import { deepCompare } from '../utils/graphUtils';
+import { addToSelectedNodes, removeToSelectedNodes, setCurrentView } from '../redux/viewSlice';
 import { setShortestPath } from '../redux/graphSlice';
 
 const Graph = () => {
