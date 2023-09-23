@@ -164,8 +164,9 @@ export const resetNodes = (adjacencyList, nodesToAdd, nodeOccupancy) => {
         ];
         // Step 1: Add adjacent neighbors to node back
         neighbors.forEach(neighbor => {
-            const nodeIsNotBlocked = !runningNodeOccupancy[neighbor] || (runningNodeOccupancy[neighbor].parkedCar && !['small','medium','large','blocked'].includes(runningNodeOccupancy[neighbor].parkedCar))
-            if(nodeIsNotBlocked && updatedAdjacencyList[neighbor]){
+            const nodeIsNotBlocked = !runningNodeOccupancy[neighbor] || !['small','medium','large','blocked'].includes(runningNodeOccupancy[neighbor].parkedCar)
+            const nodeIsNotEntrance = !runningNodeOccupancy[neighbor] || !runningNodeOccupancy[neighbor].entrance
+            if(nodeIsNotBlocked && updatedAdjacencyList[neighbor] && nodeIsNotEntrance){
                 if(!updatedAdjacencyList[nodeToAdd].includes(neighbor)){
                     updatedAdjacencyList[nodeToAdd] = [...updatedAdjacencyList[nodeToAdd], neighbor]
                 }
