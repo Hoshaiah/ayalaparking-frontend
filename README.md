@@ -4,7 +4,7 @@ Check out live demo in here [https://hoshaiah.github.io/ayalaparking-frontend/](
 
 
 To launch app on your local
-```sh
+```bash
 npm install
 npm start
 ```
