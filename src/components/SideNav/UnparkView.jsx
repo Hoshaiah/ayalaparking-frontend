@@ -114,7 +114,7 @@ const UnparkView = () => {
     }, [parkedCarInput, dateInput])
 
     return (
-        <div className="h-full mx-1 overflow-y-scroll">
+        <div className="h-full mx-1 overflow-y-scroll scrollbar-disappear">
             <div className="flex flex-col w-full ml-2 mt-1 text-neutral-100 font-semibold text-md"> {'Unpark car details'}</div>
             <div className={`flex flex-col w-full ${receipt ? 'h-64':'h-full'} items-center bg-neutral-200`}>
                 <div className="flex flex-col w-full px-4 mt-4">

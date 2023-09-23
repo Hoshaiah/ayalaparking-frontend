@@ -131,7 +131,7 @@ const Graph = () => {
 
 
     return (
-        <div className="w-full bg-slate-100 flex justify-center pt-20">
+        <div className="w-full bg-slate-100 flex justify-center pt-10">
             <div className="flex flex-row border-black border w-fit h-fit text-xs">
                 {rows}
             </div>

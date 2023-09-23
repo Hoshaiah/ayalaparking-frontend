@@ -41,7 +41,7 @@ body::-webkit-scrollbar {
   width: 0.4em;
 }
 
-body::-webkit-scrollbar-track {
+ body::-webkit-scrollbar-track {
   background: transparent; /* Make the track invisible */
 }
 
@@ -49,6 +49,17 @@ body::-webkit-scrollbar-thumb {
   background-color: transparent; /* Make the thumb (handle) invisible */
 }
 
+.scrollbar-disappear::-webkit-scrollbar {
+  width: 0.4em;
+}
+
+.scrollbar-disappear::-webkit-scrollbar-track {
+  background: transparent; /* Make the track invisible */
+}
+
+.scrollbar-disappear::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Make the thumb (handle) invisible */
+}
 .align-start {
   align-content: flex-start
 }

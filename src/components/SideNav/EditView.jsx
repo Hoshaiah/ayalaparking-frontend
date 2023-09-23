@@ -95,7 +95,7 @@ const EditView = () => {
     },[viewState.selectedNodes, graph.nodeOccupancy])
 
     return (
-        <div className="h-full mx-1">
+        <div className="h-full mx-1 overflow-y-scroll scrollbar-disappear">
             <div className="flex justify-between w-full">
                 <div className="flex mt-1 ml-2 text-neutral-100 font-semibold"> {'Selected nodes'}</div>
                 {viewState.selectedNodes.length > 0 && <button className="text-neutral-100 text-xs my-1 select-none border-gray-50 border rounded-md px-1 " onClick={()=> handleClearAll()}>Clear all selected</button>}
@@ -109,7 +109,7 @@ const EditView = () => {
                 ))}
             </div>
             <div className="flex flex-col w-full ml-2 mt-2 text-neutral-100 font-semibold text-md"> {'Edit nodes'}</div>
-            <div className="flex flex-col w-full h-full items-center bg-neutral-200 overflow-y-scroll"> 
+            <div className="flex flex-col w-full h-full items-center bg-neutral-200"> 
                 <button className={`${editDisabled? 'bg-gray-400 text-white': 'bg-neutral-100 hover:opacity-90'} text-black font-semibold p-1 rounded-md w-40 h-12 mt-4 mb-2`} onClick={handleResetClick} disabled={editDisabled} >Reset</button>
                 <button className={`${editDisabled? 'bg-gray-400': 'bg-saffron hover:opacity-90'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={() => handleParkingClick('small')} disabled={editDisabled} >Small Parking</button>
                 <button className={`${editDisabled? 'bg-gray-400':'bg-sandy hover:opacity-90'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={() => handleParkingClick('medium')} disabled={editDisabled} >Medium Parking</button>

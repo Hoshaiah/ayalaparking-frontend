@@ -68,7 +68,6 @@ const ParkView = () => {
         // Check if car exited parking less than an hour ago
         if (lastUnparkHistory && lastUnparkHistory.action === 'unpark') {
             const hoursSinceLastExit = calculateHourDifference(lastUnparkHistory.exitTime, dateInput)
-            console.log(hoursSinceLastExit)
             if(hoursSinceLastExit < 0) {
                 setDateTimeHelperText(`You last exit time ${lastUnparkHistory.exitTime} is later than your current set entry time ${dateInput}. This is not possible.`)
                 return;
@@ -142,7 +141,7 @@ const ParkView = () => {
     },[entranceInput, vehicleSize, prioritizeCostInput])
     
     return (
-        <div className="h-full mx-1">
+        <div className="h-full mx-1 overflow-y-scroll scrollbar-disappear">
             <div className="flex flex-col w-full ml-2 mt-1 text-neutral-100 font-semibold text-md"> {'Park car details'}</div>
             <div className="flex flex-col w-full h-full items-center bg-neutral-200">
                 <div className="flex flex-col w-full px-4 mt-4">
