@@ -82,13 +82,16 @@ const EditView = () => {
     }, [viewState.selectedNodes])
 
     useEffect(() => {
-        const numberOfEntrances = countNumberOfEntrances([], graph.nodeOccupancy)
-        const numberOfEntrancesSelected = countNumberOfEntrances(viewState.selectedNodes, graph.nodeOccupancy)
-        if (numberOfEntrances - numberOfEntrancesSelected < 3 ) {
-            setEditDisabled(true)
-        }  else {
-            setEditDisabled(false)
+        const disableEditButtons = () => {
+            const numberOfEntrances = countNumberOfEntrances([], graph.nodeOccupancy)
+            const numberOfEntrancesSelected = countNumberOfEntrances(viewState.selectedNodes, graph.nodeOccupancy)
+            if (numberOfEntrances - numberOfEntrancesSelected < 3 ) {
+                setEditDisabled(true)
+            }  else {
+                setEditDisabled(false)
+            }
         }
+        disableEditButtons()
     },[viewState.selectedNodes, graph.nodeOccupancy])
 
     return (
