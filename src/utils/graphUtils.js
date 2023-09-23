@@ -135,6 +135,25 @@ export const getParkedCarNodes= (occupancy) => {
     return filteredNodes
 }
 
+export const determineNodeParkedCar = (nodeOccupancy, node) => {
+    if(!nodeOccupancy[node] || !nodeOccupancy[node].parkedCar) {
+        return ''
+    } 
+
+    if(nodeOccupancy[node].parkedCar === 'small'){
+        return 'S'
+    }
+
+    if(nodeOccupancy[node].parkedCar === 'medium'){
+        return 'M'
+    }
+    if(nodeOccupancy[node].parkedCar === 'large'){
+        return 'L'
+    }
+
+    return ''
+}
+
 export const deepCompare = (obj1, obj2, path = '') => {
     // Check if both inputs are arrays
     if (Array.isArray(obj1) && Array.isArray(obj2)) {
