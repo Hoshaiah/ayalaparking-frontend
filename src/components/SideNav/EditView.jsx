@@ -8,7 +8,7 @@ const EditView = () => {
     const dispatch = useDispatch()
     const viewState = useSelector(state => state.view)
     const graph = useSelector(state => state.graph)
-    const [entranceDisabled, setEntranceDisabled] = useState(false)
+    const [entranceDisabled, setEntranceDisabled] = useState(true)
     const [editDisabled, setEditDisabled] = useState(false)
 
 
@@ -62,23 +62,29 @@ const EditView = () => {
     }
 
     useEffect(() => { 
-        // Disable entrance button if there is at least one non-edge node selected
-        const hasNoneEdgeNode = (nodes = [], n) => {
-            for (let item of nodes) {
-                let [x, y] = item.split('-').map(Number);
-                if (x !== 0 && x !== 14 && y !== 0 && y !== 14) {
-                    return true;
+        const disableEntranceButton = () => {
+            // Disable entrance button if there is at least one non-edge node selected
+            const checkforNoneEdgeNodes = (nodes = [], n) => {
+                for (let item of nodes) {
+                    let [x, y] = item.split('-').map(Number);
+                    if (x !== 0 && x !== 14 && y !== 0 && y !== 14) {
+                        return true;
+                    }
                 }
+                return false;
             }
-            return false;
+            const hasNoneEdgeNodes = checkforNoneEdgeNodes(viewState.selectedNodes, graph.grapSize - 1)
+            const hasNoNodesSelected = viewState.selectedNodes.length === 0
+            const shouldDisableEntranceButton = hasNoNodesSelected || hasNoneEdgeNodes
+            setEntranceDisabled(shouldDisableEntranceButton)
         }
-        setEntranceDisabled(hasNoneEdgeNode(viewState.selectedNodes, graph.grapSize - 1))
+        disableEntranceButton();
     }, [viewState.selectedNodes])
 
     useEffect(() => {
         const numberOfEntrances = countNumberOfEntrances([], graph.nodeOccupancy)
         const numberOfEntrancesSelected = countNumberOfEntrances(viewState.selectedNodes, graph.nodeOccupancy)
-        if (numberOfEntrances - numberOfEntrancesSelected < 3 && viewState.selectedNodes.length > 0 ) {
+        if (numberOfEntrances - numberOfEntrancesSelected < 3 ) {
             setEditDisabled(true)
         }  else {
             setEditDisabled(false)
