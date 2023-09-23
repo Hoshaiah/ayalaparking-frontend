@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setCarHistory } from "../../redux/historySlice";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const HistoryPane = () => {
     const dispatch = useDispatch()
@@ -24,9 +24,9 @@ const HistoryPane = () => {
         }
         getCarsParked()
     }, [history.carHistory])
-    console.log(history.carHistory[carSelected])
+    
     return(
-        <div className=" w-[32rem] bg-neutral-500 overflow-scroll p-0">
+        <div className=" w-[32rem] bg-neutral-500 p-0">
             <div className="flex flex-col w-full">
                 <div className="flex items-center bg-neutral-200 font-bold w-full h-10">
                     <h1 className="bg-neutral-500 h-full p-2 text-neutral-100">Vehicle history</h1>
@@ -48,10 +48,10 @@ const HistoryPane = () => {
                     </button>
                 </div>
             </div>
-            <div className="flex flex-col w-full h-full px-3 mt-4 pb-4">
+            <div className="flex flex-col w-full h-[calc(100vh-10rem)] mt-4">
                 {carSelected !== '' && history.carHistory[carSelected] &&
-                    <div className={`flex ${sortDescending ? 'flex-col-reverse' : 'flex-col'}`}>
-                       {history.carHistory[carSelected].map((item) => (
+                    <div className={`flex ${sortDescending ? 'flex-col' : 'flex-col-reverse'} flex-1 overflow-y-scroll px-2 pb-4`}>
+                       {history.carHistory[carSelected].slice().reverse().map((item) => (
                         <div className="flex flex-col pl-6 mt-4 text-sm w-full bg-gray-200">
                             {item.action && <div className="flex w-full">
                                 <h1 className="w-fit">{`Action:`}</h1>
@@ -69,10 +69,6 @@ const HistoryPane = () => {
                                 <h1 className="w-fit">{`Parking size:`}</h1>
                                 <h1 className="w-fit pl-2">{`${item.parkingSize}`}</h1>
                             </div>}
-                            {item.continuationFromLastParking && <div className="flex w-full">
-                                <h1 className="w-fit">{`Continuation entry:`}</h1>
-                                <h1 className="w-fit pl-2">{`${'true'}`}</h1>
-                            </div>}
                             {item.entryTime && <div className="flex w-full">
                                 <h1 className="w-fit">{`Entry time:`}</h1>
                                 <h1 className="w-fit pl-2">{`${item.entryTime}`}</h1>
@@ -85,11 +81,11 @@ const HistoryPane = () => {
                                 <h1 className="w-fit">{`Exit time:`}</h1>
                                 <h1 className="w-fit pl-2">{`${item.exitTime}`}</h1>
                             </div>}
-                            {[undefined,null].includes(item.costPaidAlready) && <div className="flex w-full">
+                            <div className="flex w-full">
                                 <h1 className="w-fit">{`Cost paid from previous:`}</h1>
                                 <h1 className="w-fit pl-2">{`${item.costPaidAlready}`}</h1>
-                            </div>}
-                            {![undefined,null].includes(item.totalBill) && <div className="flex w-full">
+                            </div>
+                            {item.totalBill !== undefined && <div className="flex w-full">
                                 <h1 className="w-fit">{`Total bill:`}</h1>
                                 <h1 className="w-fit pl-2">{`Php ${item.totalBill}`}</h1>
                             </div>}
