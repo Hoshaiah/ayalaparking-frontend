@@ -93,7 +93,7 @@ const EditView = () => {
             </div>
             <div className="align-start flex flex-wrap space-x-1 h-28 bg-neutral-200 overflow-scroll overflow-x-hidden">
                 {viewState.selectedNodes && viewState.selectedNodes.map((node) => (
-                    <div className="flex bg-neutral-50 w-16 h-8 rounded-lg items-center justify-around m-1 border-neutral-900 border">
+                    <div key={node} className="flex bg-neutral-50 w-16 h-8 rounded-lg items-center justify-around m-1 border-neutral-900 border">
                         <button className="select-none font-semibold text-neutral-700 hover:text-gray-500" onClick={() => handleRemoveSelectedNode(node)}>x</button>
                        <h1 className="select-none">{node}</h1> 
                     </div>
