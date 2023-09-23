@@ -21,6 +21,7 @@ const ParkView = () => {
     const [calculateButtonDisabled, setCalculateButtonDisabled] = useState(false)
     const [parkButtonDisabled, setParkButtonDisabled] = useState(true)
     const [entranceSelectionHelperText, setEntranceSelectionHelperText] = useState(true)
+    const [calculateButtonHelperText, setCalculateButtonHelperText] = useState('')
 
     const handleDateInputChange = (e) => {
         setDateTimeHelperText('')
@@ -38,7 +39,9 @@ const ParkView = () => {
         if(nearestParking) {
             const shortestPath = findShortestPath(data.distances, data.previous, entranceInput, nearestParking.node)
             dispatch(setShortestPath(shortestPath)) 
+            return;
         }
+        setCalculateButtonHelperText('No available slots found')
     }
 
     const handleParkVehicle = () => {
@@ -141,10 +144,11 @@ const ParkView = () => {
     }, [graph.nodeOccupancy])
 
     useEffect(() => {
-        const refreshShortestPathOnInputChange = () => {
+        const refreshShortestPathAndNotifOnInputChange = () => {
+           setCalculateButtonHelperText('')
            dispatch(setShortestPath([])) 
         }
-        refreshShortestPathOnInputChange()
+        refreshShortestPathAndNotifOnInputChange()
     },[entranceInput, vehicleSize, prioritizeCostInput])
     
     return (
@@ -212,6 +216,7 @@ const ParkView = () => {
                     />
                 </div>
                 <div className="flex flex-col w-full px-4 mt-4">
+                    <p className="text-red-700 text-sm mb-1 ml-1">{calculateButtonHelperText}</p>
                     <button className={`${calculateButtonDisabled ? 'bg-gray-400':'bg-tree hover:opacity-90'} text-white font-semibold p-1 rounded-md w-60 h-12 my-2"`} onClick={handleCalculateShortestPaths} disabled={calculateButtonDisabled}>{graph.shortestPath.length > 0 ?'Recalculate Parking':`Calculate Nearest Parking`} </button>
                     {!parkButtonDisabled && <button className="bg-pink hover:opacity-90 text-white font-semibold p-1 rounded-md w-60 h-12 my-2" onClick={handleParkVehicle} disabled={parkButtonDisabled}>Park</button>}
                 </div>
