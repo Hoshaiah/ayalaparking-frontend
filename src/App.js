@@ -7,6 +7,7 @@ import { setAdjacencyList, setGraphSize, setNodeOccupancy, setOriginalAdjacencyL
 import { useEffect } from 'react';
 import SideNav from './components/SideNav/SideNav';
 import { setCarHistory } from './redux/historySlice';
+import HistoryPane from './components/History/HistoryPane';
 function App() {
   const dispatch = useDispatch()
   const graphState = useSelector(state => state.graph)
@@ -42,6 +43,7 @@ function App() {
       <div className="fixed top-12 flex flex-row w-full">
         <SideNav/>
         <Graph />
+        <HistoryPane/>
       </div>
     </div>
   );

@@ -18,7 +18,9 @@ const historySlice = createSlice({
                     entryTime: action.payload.entryTime,
                     costPaidAlready: action.payload.costPaidAlready,
                     exitTime: action.payload.exitTime,
-                    totalBill: action.payload.totalBill
+                    totalBill: action.payload.totalBill,
+                    continuationFromLastParking: action.payload.continuationFromLastParking,
+                    recentEntryTime: action.payload.recentEntryTime
                 }]
             }            
         } else {
@@ -34,7 +36,9 @@ const historySlice = createSlice({
                     entryTime: action.payload.entryTime,
                     costPaidAlready: action.payload.costPaidAlready,
                     exitTime: action.payload.exitTime,
-                    totalBill: action.payload.totalBill
+                    totalBill: action.payload.totalBill,
+                    continuationFromLastParking: action.payload.continuationFromLastParking,
+                    recentEntryTime: action.payload.recentEntryTime
                 }]
             }            
 

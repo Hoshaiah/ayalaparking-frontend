@@ -64,6 +64,8 @@ const ParkView = () => {
         let entryTime = dateInput
         let costPaidAlready = 0
         let parkingSize = graph.nodeOccupancy[nodeDestination].parking
+        let continuationFromLastParking = false
+        let recentEntryTime = false
 
         // Check if car exited parking less than an hour ago
         if (lastUnparkHistory && lastUnparkHistory.action === 'unpark') {
@@ -76,6 +78,8 @@ const ParkView = () => {
                 entryTime = lastUnparkHistory.entryTime
                 costPaidAlready = lastUnparkHistory.totalBill
                 parkingSize = determineWhichParkingToUse(graph.nodeOccupancy[nodeDestination].parking, lastUnparkHistory.parkingSize)
+                continuationFromLastParking = true
+                recentEntryTime = dateInput
             }
         }
 
@@ -88,6 +92,8 @@ const ParkView = () => {
            parkingSize: parkingSize,
            entryTime: entryTime,
            costPaidAlready: costPaidAlready,
+           continuationFromLastParking: continuationFromLastParking,
+           recentEntryTime,
        }))
         dispatch(setNodeOccupancy({
             action: 'parkCar',

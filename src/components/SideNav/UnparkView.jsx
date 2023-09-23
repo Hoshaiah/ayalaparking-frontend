@@ -27,20 +27,15 @@ const UnparkView = () => {
         const carPlate = graph.nodeOccupancy[parkedCarInput].carPlate
         const currentVehicleHistory = history.carHistory[carPlate]
         const lastParkHistory = currentVehicleHistory && currentVehicleHistory[currentVehicleHistory.length-1]
-        const numberOfHoursParked = calculateHourDifference(lastParkHistory.entryTime, dateInput)
-
-        if(numberOfHoursParked < 0) {
-            setDateTimeHelperText(`Entry time ${lastParkHistory.entryTime} is later than exit time ${dateInput}. This is not possible.`)
+        
+        const timeToCompare = lastParkHistory.recentEntryTime || lastParkHistory.entryTime
+        const timeDifferenceOnLastEntryAndExit = calculateHourDifference(timeToCompare, dateInput)
+        if(timeDifferenceOnLastEntryAndExit < 0) {
+            setDateTimeHelperText(`Your recent entry time ${timeToCompare} is later than exit time ${dateInput}. This is not possible.`)
             return;
         }
-
-        const lastUnParkHistory = currentVehicleHistory && currentVehicleHistory[currentVehicleHistory.length-2]
-        const differenceBetweenCurrentAndPreviousExit = lastUnParkHistory && calculateHourDifference(lastUnParkHistory.exitTime, dateInput)
-        if(differenceBetweenCurrentAndPreviousExit < 0) {
-            setDateTimeHelperText(`Your last exit time ${lastUnParkHistory.exitTime} is later than your current exit time ${dateInput}. This is not possible my friend.`)
-            return;
-        }
-    
+        
+        const numberOfHoursParked= calculateHourDifference(lastParkHistory.entryTime, dateInput)
         const totalParkingBreakdown = calculateParkingCost(numberOfHoursParked, lastParkHistory.parkingSize)
         totalParkingBreakdown['costPaidAlready'] = lastParkHistory.costPaidAlready || 0
         totalParkingBreakdown['carPlate'] = carPlate
