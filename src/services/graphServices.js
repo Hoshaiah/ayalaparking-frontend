@@ -2,7 +2,7 @@ import Constants from "../constants/graphConstants"
 
 export const createGraph = async (adjacencyList, nodeOccupancy, name) => {
     try {
-        const resp = await fetch(`${Constants.server}/graphs`, {
+        const resp = await fetch(`${Constants.server}/graph`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
