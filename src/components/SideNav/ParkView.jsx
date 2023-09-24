@@ -177,7 +177,7 @@ const ParkView = () => {
     return (
         <div className="h-full mx-1 overflow-y-scroll scrollbar-disappear">
             <div className="flex flex-col w-full ml-2 mt-1 text-neutral-100 font-semibold text-md"> {'Park car details'}</div>
-            <div className="flex flex-col w-full h-full items-center bg-neutral-200">
+            <div className="flex flex-col w-full h-fit items-center bg-neutral-200 pb-6">
                 <div className="flex flex-col w-full px-4 mt-4">
                     <h1 className="font-semibold text-neutral-950">Vehicle Plate</h1>
                     <input
@@ -242,6 +242,29 @@ const ParkView = () => {
                     <p className="text-red-700 text-sm mb-1 ml-1">{calculateButtonHelperText}</p>
                     <button className={`${calculateButtonDisabled ? 'bg-gray-400':'bg-tree hover:opacity-90'} text-white font-semibold p-1 rounded-md w-60 h-12 my-2"`} onClick={handleCalculateShortestPaths} disabled={calculateButtonDisabled}>{graph.shortestPath.length > 0 ?'Recalculate Parking':`Calculate Nearest Parking`} </button>
                     {!parkButtonDisabled && <button className="bg-pink hover:opacity-90 text-white font-semibold p-1 rounded-md w-60 h-12 my-2" onClick={handleParkVehicle} disabled={parkButtonDisabled}>Park</button>}
+                </div>
+            </div>
+            <div className="flex flex-col w-full ml-2 mt-1 text-neutral-100 font-semibold text-md"> {'Legends'}</div>
+            <div className="bg-neutral-200 h-full flex justify-start pt-2 text-sm w-full flex-wrap align-start">
+                <div className="flex items-center h-10 rounded-md m-1">
+                    <div className="h-4 w-4 bg-saffron mx-4"></div>
+                    <h1 className="w-fit">Small</h1>
+                </div>
+                <div className="flex items-center h-10 rounded-md m-1">
+                    <div className="h-4 w-4 bg-sandy mx-4"></div>
+                    <h1 className="w-fit">Medium</h1>
+                </div>
+                <div className="flex items-center h-10 rounded-md m-1">
+                    <div className="h-4 w-4 bg-pink mx-4"></div>
+                    <h1 className="w-fit">Large</h1>
+                </div>
+                <div className="flex items-center h-10 rounded-md m-1">
+                    <div className="h-4 w-4 bg-tree mx-4"></div>
+                    <h1 className="w-fit">Block</h1>
+                </div>
+                <div className="flex items-center h-10 rounded-md m-1">
+                    <div className="h-4 w-4 bg-teal mx-4"></div>
+                    <h1 className="w-fit">Entrance</h1>
                 </div>
             </div>
         </div>
