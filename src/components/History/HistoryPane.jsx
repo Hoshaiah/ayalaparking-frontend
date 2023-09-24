@@ -6,6 +6,7 @@ const HistoryPane = () => {
     const [carSelection, setCarSelection] = useState([''])
     const [carSelected, setCarSelected] = useState()
     const [sortDescending, setSortDescending] = useState(true)
+    const [carHistoryToShow, setCarHistoryToShow] = useState([])
 
     const handleClickSort = () => {
         if(sortDescending) {
@@ -22,6 +23,21 @@ const HistoryPane = () => {
         }
         getCarsParked()
     }, [history.carHistory])
+
+    useEffect(() => {
+        const updateCarHistoryToShow = () => {
+            if(!carSelected || carSelected === ''){
+                return;
+            }
+
+            if(sortDescending) {
+                setCarHistoryToShow(history.carHistory[carSelected].slice().reverse())
+            } else {
+                setCarHistoryToShow(history.carHistory[carSelected])
+            }
+        }
+        updateCarHistoryToShow()
+    },[history.carHistory, sortDescending, carSelected])
     
     return(
         <div className=" w-[32rem] bg-neutral-500 p-0">
@@ -48,8 +64,8 @@ const HistoryPane = () => {
             </div>
             <div className="flex flex-col w-full h-[calc(100vh-10rem)] mt-4">
                 {carSelected !== '' && history.carHistory[carSelected] &&
-                    <div className={`flex ${sortDescending ? 'flex-col' : 'flex-col-reverse'} flex-1 overflow-y-scroll px-2 pb-4`}>
-                       {history.carHistory[carSelected].slice().reverse().map((item) => (
+                    <div className={`flex flex-col flex-1 overflow-y-scroll px-2 pb-4`}>
+                       {carHistoryToShow.map((item) => (
                         <div className="flex flex-col pl-6 mt-4 text-sm w-full bg-gray-200">
                             {item.action && <div className="flex w-full">
                                 <h1 className="w-fit">{`Action:`}</h1>
