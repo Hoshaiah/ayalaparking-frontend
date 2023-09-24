@@ -8,11 +8,11 @@ const graphSlice = createSlice({
   initialState: {
     graphSize: 15,
     originalAdjacencyList: createAdjacencyList(15),
-    adjacencyList: JSON.parse(localStorage.getItem('adjacencyList')) || createAdjacencyList(15),
+    adjacencyList: {},
     distances: {},
     previous: {},
     shortestPath: [],
-    nodeOccupancy: JSON.parse(localStorage.getItem('nodeOccupancy')) || {}
+    nodeOccupancy: {},
   },
   reducers: {
     setGraphSize: (state, action) => {
@@ -32,6 +32,9 @@ const graphSlice = createSlice({
     },
     setShortestPath: (state, action) => {
       state.shortestPath = action.payload
+    },
+    setAllNodeOccupancy: (state, action) => {
+      state.nodeOccupancy = action.payload
     },
     setNodeOccupancy: (state, action) => {
         const updatedNodeOccupancy = {
@@ -81,5 +84,5 @@ const graphSlice = createSlice({
   },
 });
 
-export const { setOriginalAdjacencyList, setAdjacencyList, setDistances, setPrevious, setShortestPath, setNodeOccupancy, setGraphSize} = graphSlice.actions;
+export const { setOriginalAdjacencyList, setAdjacencyList, setDistances, setPrevious, setShortestPath, setNodeOccupancy, setGraphSize, setAllNodeOccupancy} = graphSlice.actions;
 export default graphSlice.reducer;

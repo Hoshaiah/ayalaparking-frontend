@@ -1,33 +1,56 @@
 import './App.css';
 import Graph from './components/Graph';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import SideNav from './components/SideNav/SideNav';
 import HistoryPane from './components/History/HistoryPane';
+import { getAllGraphNames, getGraph } from './services/graphServices';
+import { setAdjacencyList, setAllNodeOccupancy } from './redux/graphSlice';
+
 function App() {
+  const dispatch = useDispatch()
   const graphState = useSelector(state => state.graph)
   const history = useSelector(state => state.history)
 
-  useEffect(() => {
-    const updateLocalStorageAdjacencyList = () => {
-      localStorage.setItem('adjacencyList', JSON.stringify(graphState.adjacencyList))
-    }
-    updateLocalStorageAdjacencyList()
-  }, [graphState.adjacencyList])
+  // useEffect(() => {
+  //   const updateLocalStorageAdjacencyList = () => {
+  //     localStorage.setItem('adjacencyList', JSON.stringify(graphState.adjacencyList))
+  //   }
+  //   updateLocalStorageAdjacencyList()
+  // }, [graphState.adjacencyList])
+
+  // useEffect(() => {
+  //   const updateLocalStorageNodeOccupancy = () => {
+  //     localStorage.setItem('nodeOccupancy', JSON.stringify(graphState.nodeOccupancy))
+  //   }
+  //   updateLocalStorageNodeOccupancy()
+  // }, [graphState.nodeOccupancy])
+
+  // useEffect(() => {
+  //   const updateLocalStorageCarHistory = () => {
+  //     localStorage.setItem('carHistory', JSON.stringify(history.carHistory))
+  //   }
+  //   updateLocalStorageCarHistory()
+  // }, [history.carHistory])
 
   useEffect(() => {
-    const updateLocalStorageNodeOccupancy = () => {
-      localStorage.setItem('nodeOccupancy', JSON.stringify(graphState.nodeOccupancy))
-    }
-    updateLocalStorageNodeOccupancy()
-  }, [graphState.nodeOccupancy])
+      const intializeGraphNames = async () => {
+        const graphNamesData =  await getAllGraphNames()
+        if(!graphNamesData.success || !graphNamesData.data.graphNames[0]) {
+          return;
+        }
 
-  useEffect(() => {
-    const updateLocalStorageCarHistory = () => {
-      localStorage.setItem('carHistory', JSON.stringify(history.carHistory))
-    }
-    updateLocalStorageCarHistory()
-  }, [history.carHistory])
+        const firstGraphData = await getGraph(graphNamesData.data.graphNames[0])
+        if(!firstGraphData.success) {
+          return; 
+        }
+
+        // console.log(firstGraphData.data.nodeOccupancy)
+        dispatch(setAdjacencyList(firstGraphData.data.adjacencyList))
+        dispatch(setAllNodeOccupancy(firstGraphData.data.nodeOccupancy))
+      }
+      intializeGraphNames()
+  },[])
   
 
   return (
