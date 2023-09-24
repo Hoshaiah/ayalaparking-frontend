@@ -8,35 +8,15 @@ import { createGraph, getAllGraphNames, getGraph } from './services/graphService
 import { setAdjacencyList, setAllNodeOccupancy } from './redux/graphSlice';
 import { createAdjacencyList } from './utils/algorithmUtils';
 import Constants from './constants/graphConstants';
+import { getAllLogs } from './services/parkServices';
+import { setAllCarHistory } from './redux/historySlice';
+import { formatHistoryFromRequest } from './utils/parkingUtils';
 
 function App() {
   const dispatch = useDispatch()
-  const graphState = useSelector(state => state.graph)
-  const history = useSelector(state => state.history)
-
-  // useEffect(() => {
-  //   const updateLocalStorageAdjacencyList = () => {
-  //     localStorage.setItem('adjacencyList', JSON.stringify(graphState.adjacencyList))
-  //   }
-  //   updateLocalStorageAdjacencyList()
-  // }, [graphState.adjacencyList])
-
-  // useEffect(() => {
-  //   const updateLocalStorageNodeOccupancy = () => {
-  //     localStorage.setItem('nodeOccupancy', JSON.stringify(graphState.nodeOccupancy))
-  //   }
-  //   updateLocalStorageNodeOccupancy()
-  // }, [graphState.nodeOccupancy])
-
-  // useEffect(() => {
-  //   const updateLocalStorageCarHistory = () => {
-  //     localStorage.setItem('carHistory', JSON.stringify(history.carHistory))
-  //   }
-  //   updateLocalStorageCarHistory()
-  // }, [history.carHistory])
 
   useEffect(() => {
-      const intializeGraphNames = async () => {
+      const intializeGraph = async () => {
         const graphNamesData =  await getAllGraphNames()
         if(!graphNamesData.success) {
           return;
@@ -64,7 +44,18 @@ function App() {
           }
         }
       }
-      intializeGraphNames()
+      intializeGraph()
+  },[])
+
+  useEffect(() => {
+    const initializeHistory = async () => {
+      const logsData = await getAllLogs()
+        if(logsData.success) {
+          const formattedHistory = formatHistoryFromRequest(logsData.data.logs)
+          dispatch(setAllCarHistory(formattedHistory))
+        }
+    }
+    initializeHistory()
   },[])
   
 

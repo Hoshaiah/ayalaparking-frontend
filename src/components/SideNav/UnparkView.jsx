@@ -1,9 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
-import { getParkedCarNodes, turnNodesToParking } from "../../utils/graphUtils";
+import { getParkedCarNodes, getUpdatedNodeOccupancy, turnNodesToParking } from "../../utils/graphUtils";
 import { calculateHourDifference, calculateParkingCost, getDateTimeNow, validateDateFormat } from "../../utils/parkingUtils";
-import { setAdjacencyList, setNodeOccupancy } from "../../redux/graphSlice";
+import { setAdjacencyList, setAllNodeOccupancy, setNodeOccupancy } from "../../redux/graphSlice";
 import { useState, useEffect } from "react";
 import { setCarHistory } from "../../redux/historySlice";
+import { createLog } from "../../services/parkServices";
+import Constants from "../../constants/graphConstants";
 
 const UnparkView = () => {
     const dispatch = useDispatch()
@@ -45,8 +47,16 @@ const UnparkView = () => {
         setReceipt(totalParkingBreakdown)
     }
 
-    const handleUnparkCar = () => {
-        dispatch(setCarHistory({
+    const handleUnparkCar = async () => {
+
+        const unparkCarOptions = {
+            node: parkedCarInput,
+            action: 'unparkCar',
+        }
+        const updatedNodeOccupancy = getUpdatedNodeOccupancy(graph.nodeOccupancy, unparkCarOptions)
+        const updatedAdjacencyList = turnNodesToParking(graph.adjacencyList, [parkedCarInput], graph.nodeOccupancy)
+        
+        const logParams = {
             action: 'unpark',
             carPlate: receipt.carPlate,
             node: parkedCarInput,
@@ -55,14 +65,28 @@ const UnparkView = () => {
             exitTime: dateInput,
             parkingSize: receipt.parkingSize,
             costPaidAlready: receipt.costPaidAlready,
-            totalBill: receipt.total,
-        }))
-        dispatch(setNodeOccupancy({
-            node: parkedCarInput,
-            action: 'unparkCar',
-        }))
-        const updatedAdjacencyList = turnNodesToParking(graph.adjacencyList, [parkedCarInput], graph.nodeOccupancy)
-        dispatch(setAdjacencyList(updatedAdjacencyList))
+            totalBill: receipt.total, 
+            graph_name: Constants.defaultGraphName,
+            adjacencyList: updatedAdjacencyList,
+            nodeOccupancy: updatedNodeOccupancy,
+        }
+        const logData = await createLog(logParams) 
+
+        if(logData.success) {
+            dispatch(setAdjacencyList(updatedAdjacencyList))
+            dispatch(setAllNodeOccupancy(updatedNodeOccupancy))
+            dispatch(setCarHistory({
+                action: 'unpark',
+                carPlate: receipt.carPlate,
+                node: parkedCarInput,
+                parkedCar: graph.nodeOccupancy[parkedCarInput].parkedCar,
+                entryTime: receipt.entryTime,
+                exitTime: dateInput,
+                parkingSize: receipt.parkingSize,
+                costPaidAlready: receipt.costPaidAlready,
+                totalBill: receipt.total,
+            }))
+        }
     }
 
     const handleDateInputChange = (e) => {

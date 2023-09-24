@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
-import { blockNodes, getEntranceNodes } from "../../utils/graphUtils";
+import { blockNodes, getEntranceNodes, getUpdatedNodeOccupancy } from "../../utils/graphUtils";
 import { dijkstra, findShortestPath, findNearestParking} from "../../utils/algorithmUtils";
 import { calculateHourDifference, determineWhichParkingToUse, getDateTimeNow, validateDateFormat } from "../../utils/parkingUtils";
-import {  setAdjacencyList, setDistances, setNodeOccupancy, setShortestPath } from "../../redux/graphSlice";
+import {  setAdjacencyList, setAllNodeOccupancy, setDistances, setNodeOccupancy, setShortestPath } from "../../redux/graphSlice";
 import { useEffect, useState } from "react";
 import { setCarHistory } from "../../redux/historySlice";
+import { createLog } from "../../services/parkServices";
+import Constants from "../../constants/graphConstants";
 
 const ParkView = () => {
     const dispatch = useDispatch()
@@ -44,7 +46,7 @@ const ParkView = () => {
         setCalculateButtonHelperText('No available slots found')
     }
 
-    const handleParkVehicle = () => {
+    const handleParkVehicle = async () => {
         const isPlateNumberEmpty = plateNumberInput.trim().length === 0
         if(isPlateNumberEmpty){
             setPlateNumberHelperText('this is a required field')
@@ -88,27 +90,47 @@ const ParkView = () => {
         }
 
 
-       dispatch(setCarHistory({
-           action: 'park',
-           carPlate: plateNumberInput,
-           node: nodeDestination,
-           parkedCar: vehicleSize,
-           parkingSize: parkingSize,
-           entryTime: entryTime,
-           costPaidAlready: costPaidAlready,
-           continuationFromLastParking: continuationFromLastParking,
-           recentEntryTime,
-       }))
-        dispatch(setNodeOccupancy({
+        const nodeOccupancyBlockOptions = {
             action: 'parkCar',
             node:  nodeDestination,
             parkedCar: vehicleSize,
             entryTime: entryTime,
             carPlate: plateNumberInput
-        }))
-        const updatedAdjacencyList = blockNodes(graph.adjacencyList, [nodeDestination], graph.nodeOccupancy)
-        dispatch(setAdjacencyList(updatedAdjacencyList))
-        dispatch(setShortestPath([])) 
+        }
+        const updatedAdjacencyList = blockNodes(graph.adjacencyList, [nodeDestination])
+        const updatedNodeOccupancy = getUpdatedNodeOccupancy(graph.nodeOccupancy, nodeOccupancyBlockOptions)
+        const logParams = {
+                action: 'park',
+                carPlate: plateNumberInput,
+                node: nodeDestination,
+                parkedCar: vehicleSize,
+                parkingSize: parkingSize,
+                entryTime: entryTime,
+                costPaidAlready: costPaidAlready,
+                graph_name: Constants.defaultGraphName,
+                adjacencyList: updatedAdjacencyList,
+                nodeOccupancy: updatedNodeOccupancy,
+                recentEntryTime,
+        }
+        const logData = await createLog(logParams) 
+
+        if(logData.success) {
+            dispatch(setCarHistory({
+                action: 'park',
+                carPlate: plateNumberInput,
+                node: nodeDestination,
+                parkedCar: vehicleSize,
+                parkingSize: parkingSize,
+                entryTime: entryTime,
+                costPaidAlready: costPaidAlready,
+                continuationFromLastParking: continuationFromLastParking,
+                recentEntryTime,
+            }))
+            dispatch(setAllNodeOccupancy(updatedNodeOccupancy))
+            dispatch(setAdjacencyList(updatedAdjacencyList))
+            dispatch(setShortestPath([])) 
+            return;
+        }
     }
 
     useEffect(()=> {

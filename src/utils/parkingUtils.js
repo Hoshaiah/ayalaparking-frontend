@@ -94,3 +94,25 @@ export const validateDateFormat = (input) => {
     const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
     return regex.test(input);
 }
+
+export const formatHistoryFromRequest = (inputData) => {
+    
+    const parsedData = {};
+
+    console.log(inputData)
+    inputData.forEach(item => {
+    const { carPlate, ...details } = item;
+
+    if (!parsedData[carPlate]) {
+        parsedData[carPlate] = [];
+    }
+
+    parsedData[carPlate].push(details);
+    });
+
+    // Sort by created_at
+    for (const carPlate in parsedData) {
+    parsedData[carPlate].sort((a, b) => a.created_at - b.created_at);
+    }
+    return parsedData
+}

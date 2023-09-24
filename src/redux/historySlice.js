@@ -6,6 +6,9 @@ const historySlice = createSlice({
     carHistory: JSON.parse(localStorage.getItem('carHistory')) || {},
   },
   reducers: {
+    setAllCarHistory: (state, action) => {
+        state.carHistory = action.payload
+    },
     setCarHistory: (state, action) => {
         if (!state.carHistory[action.payload.carPlate]){
             state.carHistory = {
@@ -47,5 +50,5 @@ const historySlice = createSlice({
   },
 });
 
-export const { setCarHistory } = historySlice.actions;
+export const { setCarHistory, setAllCarHistory } = historySlice.actions;
 export default historySlice.reducer;

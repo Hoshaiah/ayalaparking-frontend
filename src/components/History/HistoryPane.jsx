@@ -71,7 +71,7 @@ const HistoryPane = () => {
                                 <h1 className="w-fit">{`Entry time:`}</h1>
                                 <h1 className="w-fit pl-2">{`${item.entryTime}`}</h1>
                             </div>}
-                            {item.recentEntryTime && <div className="flex w-full">
+                            {item.recentEntryTime && item.recentEntryTime !== 'f' && <div className="flex w-full">
                                 <h1 className="w-fit">{`New Entry time:`}</h1>
                                 <h1 className="w-fit pl-2">{`${item.recentEntryTime}`}</h1>
                             </div>}
@@ -83,7 +83,7 @@ const HistoryPane = () => {
                                 <h1 className="w-fit">{`Cost paid from previous:`}</h1>
                                 <h1 className="w-fit pl-2">{`${item.costPaidAlready}`}</h1>
                             </div>
-                            {item.totalBill !== undefined && <div className="flex w-full">
+                            {item.totalBill !== undefined && item.totalBill !== null && <div className="flex w-full">
                                 <h1 className="w-fit">{`Total bill:`}</h1>
                                 <h1 className="w-fit pl-2">{`Php ${item.totalBill}`}</h1>
                             </div>}
