@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { resetNodes, turnNodesToParking, blockNodes, turnNodestoEntrance, countNumberOfEntrances } from "../../utils/graphUtils";
-import { setAdjacencyList, setNodeOccupancy } from "../../redux/graphSlice";
+import { resetNodes, turnNodesToParking, blockNodes, turnNodestoEntrance, countNumberOfEntrances, getUpdatedNodeOccupancy } from "../../utils/graphUtils";
+import { setAdjacencyList, setAllNodeOccupancy, setNodeOccupancy } from "../../redux/graphSlice";
 import { removeAllSelectedNodes, removeToSelectedNodes } from "../../redux/viewSlice";
 import { useEffect, useState } from "react";
+import { updateGraph } from "../../services/graphServices";
 
 const EditView = () => {
     const dispatch = useDispatch()
@@ -20,45 +21,52 @@ const EditView = () => {
         dispatch(removeToSelectedNodes(node))
     }
 
-    const handleBlockClick = () => {
-        dispatch(setNodeOccupancy({
+    const updateNode = async (updatedAdjacencyList, options) => {
+        const updatedNodeOccupancy = getUpdatedNodeOccupancy(graph.nodeOccupancy, options) 
+        const updatedData = await updateGraph(graph.adjacencyList, updatedNodeOccupancy, 'first graph')
+
+        if (updatedData.success){
+            dispatch(setAllNodeOccupancy(updatedNodeOccupancy))
+            dispatch(setAdjacencyList(updatedAdjacencyList))
+            dispatch(removeAllSelectedNodes())
+            return;
+        }
+    }
+
+    const handleBlockClick = async () => {
+        const updatedAdjacencyList = blockNodes(graph.adjacencyList, viewState.selectedNodes)
+        const options = {
             nodes: viewState.selectedNodes,
             action: 'blocked',
-        }))
-        const updatedAdjacencyList = blockNodes(graph.adjacencyList, viewState.selectedNodes)
-        dispatch(setAdjacencyList(updatedAdjacencyList))
-        dispatch(removeAllSelectedNodes())
+        }
+        updateNode(updatedAdjacencyList, options)
     }
-    const handleResetClick = () => {
-        dispatch(setNodeOccupancy({
+    const handleResetClick = async () => {
+        const updatedAdjacencyList = resetNodes(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy).updatedAdjacencyList
+        const options = {
             nodes: viewState.selectedNodes,
             action: 'reset',
-        }))
-        const updatedAdjacencyList = resetNodes(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy).updatedAdjacencyList
-        dispatch(setAdjacencyList(updatedAdjacencyList))
-        dispatch(removeAllSelectedNodes())
+        }
+        updateNode(updatedAdjacencyList, options)
     }
 
-
-    const handleParkingClick = (parking) => {
-        dispatch(setNodeOccupancy({
+    const handleParkingClick = async (parking) => {
+        const updatedAdjacencyList = turnNodesToParking(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy)
+        const options = {
             nodes: viewState.selectedNodes,
             action: 'parking',
             parking: parking
-        }))
-        const updatedAdjacencyList = turnNodesToParking(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy)
-        dispatch(setAdjacencyList(updatedAdjacencyList))
-        dispatch(removeAllSelectedNodes())
+        }
+        updateNode(updatedAdjacencyList, options)
     }
 
-    const handleEntranceClick = () => {
-        dispatch(setNodeOccupancy({
+    const handleEntranceClick = async () => {
+        const updatedAdjacencyList = turnNodestoEntrance(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy)
+        const options = {
             nodes: viewState.selectedNodes,
             action: 'entrance',
-        }))
-        const updatedAdjacencyList = turnNodestoEntrance(graph.adjacencyList, viewState.selectedNodes, graph.nodeOccupancy)
-        dispatch(setAdjacencyList(updatedAdjacencyList))
-        dispatch(removeAllSelectedNodes())
+        }
+        updateNode(updatedAdjacencyList, options)
     }
 
     useEffect(() => { 
