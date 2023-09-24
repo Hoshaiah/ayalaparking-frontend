@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import EditView from "./EditView";
 import ParkView from "./ParkView";
-import { setCurrentView } from "../../redux/viewSlice";
+import { removeAllSelectedNodes, setCurrentView } from "../../redux/viewSlice";
 import UnparkView from "./UnparkView";
 import { setShortestPath } from "../../redux/graphSlice";
 
@@ -18,11 +18,13 @@ const SideNav = () => {
 
     const handleParkClick = () => {
         dispatch(setCurrentView('parkView'))
+        dispatch(removeAllSelectedNodes())
     }
     
     const handleUnparkClick = () => {
         dispatch(setCurrentView('unparkView'))
         dispatch(setShortestPath([]))
+        dispatch(removeAllSelectedNodes())
     }
 
     return (
