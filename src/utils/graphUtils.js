@@ -154,6 +154,52 @@ export const determineNodeParkedCar = (nodeOccupancy, node) => {
     return ''
 }
 
+export const getUpdatedNodeOccupancy = (nodeOccupancy, options) => {
+    const updatedNodeOccupancy = {
+      ...nodeOccupancy,
+    }
+    if(options.action === 'blocked') {
+        options.nodes.forEach(node => {
+            updatedNodeOccupancy[node] = {
+                parking: 'blocked',
+                parkedCar: 'blocked'
+            } 
+        });
+    } else if(options.action === 'parking') {
+        options.nodes.forEach(node => {
+            updatedNodeOccupancy[node] = {
+                parking: options.parking,
+                parkedCar: ''
+            }
+        })
+    } else if(options.action === 'entrance') {
+        options.nodes.forEach(node => {
+            updatedNodeOccupancy[node] = {
+                entrance: true
+            }
+        })
+    } else if(options.action === 'reset') {
+        options.nodes.forEach(node => {
+            delete updatedNodeOccupancy[node]
+        })
+    } else if(options.action === 'parkCar') {
+        updatedNodeOccupancy[options.node] = {
+            ...updatedNodeOccupancy[options.node],
+            parkedCar: options.parkedCar,
+            entryTime: options.entryTime,
+            carPlate: options.carPlate
+        }
+    } else if(options.action === 'unparkCar') {
+        updatedNodeOccupancy[options.node] = {
+            ...updatedNodeOccupancy[options.node],
+            parkedCar: '',
+        }
+        delete updatedNodeOccupancy[options.node].entryTime
+        delete updatedNodeOccupancy[options.node].carPlate
+    }
+    return updatedNodeOccupancy
+}
+
 export const deepCompare = (obj1, obj2, path = '') => {
     // Check if both inputs are arrays
     if (Array.isArray(obj1) && Array.isArray(obj2)) {
