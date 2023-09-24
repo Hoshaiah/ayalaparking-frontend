@@ -129,6 +129,7 @@ const ParkView = () => {
             dispatch(setAllNodeOccupancy(updatedNodeOccupancy))
             dispatch(setAdjacencyList(updatedAdjacencyList))
             dispatch(setShortestPath([])) 
+            setPlateNumberInput('')
             return;
         }
     }
