@@ -92,7 +92,7 @@ const Graph = () => {
                                     onClick={() => {handleNodeClick(node, nodeIsSelected)}}
                                     key={node}
                                     className={`border-black border w-10 h-10 flex flex-col items-center justify-between cursor-pointer 
-                                        ${nodeInShortestPath && viewState.currentView === 'parkView' ? 'bg-yellow-300' : ''}
+                                        ${nodeInShortestPath && viewState.currentView === 'parkView' ? 'bg-ice' : ''}
                                         ${nodeParkingColor}
                                         ${viewState.currentView === "editView" && nodeIsSelected ? 'border-ice border-4': ''}
                                     `}>
