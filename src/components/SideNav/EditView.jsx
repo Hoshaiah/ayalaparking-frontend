@@ -4,6 +4,7 @@ import { setAdjacencyList, setAllNodeOccupancy, setNodeOccupancy } from "../../r
 import { removeAllSelectedNodes, removeToSelectedNodes } from "../../redux/viewSlice";
 import { useEffect, useState } from "react";
 import { updateGraph } from "../../services/graphServices";
+import Constants from "../../constants/graphConstants";
 
 const EditView = () => {
     const dispatch = useDispatch()
@@ -23,7 +24,7 @@ const EditView = () => {
 
     const updateNode = async (updatedAdjacencyList, options) => {
         const updatedNodeOccupancy = getUpdatedNodeOccupancy(graph.nodeOccupancy, options) 
-        const updatedData = await updateGraph(graph.adjacencyList, updatedNodeOccupancy, 'first graph')
+        const updatedData = await updateGraph(graph.adjacencyList, updatedNodeOccupancy, Constants.defaultGraphName)
 
         if (updatedData.success){
             dispatch(setAllNodeOccupancy(updatedNodeOccupancy))

@@ -1,4 +1,4 @@
-import Constants from "../constants/server"
+import Constants from "../constants/graphConstants"
 
 export const createGraph = async (adjacencyList, nodeOccupancy, name) => {
     try {

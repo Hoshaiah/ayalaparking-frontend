@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import SideNav from './components/SideNav/SideNav';
 import HistoryPane from './components/History/HistoryPane';
-import { getAllGraphNames, getGraph } from './services/graphServices';
+import { createGraph, getAllGraphNames, getGraph } from './services/graphServices';
 import { setAdjacencyList, setAllNodeOccupancy } from './redux/graphSlice';
+import { createAdjacencyList } from './utils/algorithmUtils';
+import Constants from './constants/graphConstants';
 
 function App() {
   const dispatch = useDispatch()
@@ -36,18 +38,31 @@ function App() {
   useEffect(() => {
       const intializeGraphNames = async () => {
         const graphNamesData =  await getAllGraphNames()
-        if(!graphNamesData.success || !graphNamesData.data.graphNames[0]) {
+        if(!graphNamesData.success) {
           return;
         }
 
-        const firstGraphData = await getGraph(graphNamesData.data.graphNames[0])
-        if(!firstGraphData.success) {
-          return; 
+        // If there is no graph, create one
+        if(graphNamesData.data.graphNames.length === 0){
+          const newAdjacencyList = createAdjacencyList(Constants.defaultGraphSize)
+          const createdGraphData = await createGraph(newAdjacencyList, {}, Constants.defaultGraphName)
+
+          if(createdGraphData.success) {
+              dispatch(setAdjacencyList(newAdjacencyList))
+              dispatch(setAllNodeOccupancy({}))
+            return;
+          }
         }
 
-        // console.log(firstGraphData.data.nodeOccupancy)
-        dispatch(setAdjacencyList(firstGraphData.data.adjacencyList))
-        dispatch(setAllNodeOccupancy(firstGraphData.data.nodeOccupancy))
+        // If there is a graph, load it
+        if(graphNamesData.data.graphNames[0]){
+          const firstGraphData = await getGraph(graphNamesData.data.graphNames[0])
+          if(firstGraphData.success) {
+            dispatch(setAdjacencyList(firstGraphData.data.adjacencyList))
+            dispatch(setAllNodeOccupancy(firstGraphData.data.nodeOccupancy))
+            return; 
+          }
+        }
       }
       intializeGraphNames()
   },[])
