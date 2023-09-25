@@ -126,11 +126,10 @@ const EditView = () => {
                 <button className={`${editDisabled ? 'bg-gray-400': 'bg-tree hover:opacity-90'} text-white font-semibold p-1 rounded-md w-40 h-12 my-2`} onClick={handleBlockClick} disabled={editDisabled}>Block</button>
                 <button className={`${entranceDisabled ? 'bg-gray-400': 'bg-teal hover:opacity-90'} text-white font-semibold p-1 rounded-md w-40 h-12 mb-4 mt-2`} onClick={() => handleEntranceClick()} disabled={entranceDisabled}>Entrance</button>
                 <div className="px-3 pt-1 text-sm text-gray-800">
-                    <h1>Notes:</h1>
+                    <h1>To start: </h1>
                     <ul className="list-disc pl-5 text-xs">
-                        <li>There must be at least three entrance blocks present to perform other operations.</li>
-                        <li>Entrances may only be put on edges</li>
-                        <li>Nodes with cars parked may not be edited</li>
+                        <li>Place at least three entrances. </li>
+                        <li>Entrances may only be put on edges.</li>
                     </ul>
                 </div>
             </div>
