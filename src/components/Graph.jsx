@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToSelectedNodes, removeToSelectedNodes, setCurrentView } from '../redux/viewSlice';
 import { setShortestPath } from '../redux/graphSlice';
 import { determineNodeParkedCar } from '../utils/graphUtils';
-import TopNav from './TopNav/TopNav';
 
 const Graph = () => {
     const dispatch = useDispatch()
@@ -115,8 +114,7 @@ const Graph = () => {
 
 
     return (
-        <div className="flex flex-col items-center w-full bg-slate-100">
-            <TopNav/>
+        <div className="flex flex-col items-center w-full bg-slate-100 pt-8">
             <div className="flex flex-row border-black border w-fit h-fit text-xs">
                 {rows}
             </div>
