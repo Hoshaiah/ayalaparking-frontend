@@ -165,7 +165,7 @@ const UnparkView = () => {
                         </div>
                         <div className="flex w-full flex-col">
                             <h1 className="font-semibold w-full text-neutral-950">Cost Breakdown:</h1>
-                            <div className="flex flex-col pr-16 pl-6 mt-4 text-sm w-full">
+                            <div className="flex flex-col mt-4 text-sm w-full">
                                 {receipt.flatHourTotal && <div className="flex justify-between w-full">
                                     <h1 className="w-28">{`First 3 hours`}</h1>
                                     <h1 className="w-24 flex justify-end">{`${receipt.flatHourTotal}`}</h1>
