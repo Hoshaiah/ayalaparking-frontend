@@ -99,7 +99,6 @@ export const formatHistoryFromRequest = (inputData) => {
     
     const parsedData = {};
 
-    console.log(inputData)
     inputData.forEach(item => {
     const { carPlate, ...details } = item;
 
@@ -116,3 +115,16 @@ export const formatHistoryFromRequest = (inputData) => {
     }
     return parsedData
 }
+
+export const convertToList = (inputObject) => {
+    let result = [];
+    
+    for (let id in inputObject) {
+      if (inputObject.hasOwnProperty(id)) {
+        result.push({ id: id, message: inputObject[id].message, error: inputObject[id].error});
+      }
+    }
+    
+    return result;
+  }
+  

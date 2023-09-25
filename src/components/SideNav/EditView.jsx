@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { resetNodes, turnNodesToParking, blockNodes, turnNodestoEntrance, countNumberOfEntrances, getUpdatedNodeOccupancy } from "../../utils/graphUtils";
 import { setAdjacencyList, setAllNodeOccupancy, setNodeOccupancy } from "../../redux/graphSlice";
-import { removeAllSelectedNodes, removeToSelectedNodes } from "../../redux/viewSlice";
+import { addNotification, removeAllSelectedNodes, removeToSelectedNodes } from "../../redux/viewSlice";
 import { useEffect, useState } from "react";
 import { updateGraph } from "../../services/graphServices";
 import Constants from "../../constants/graphConstants";
+import { v4 } from "uuid";
 
 const EditView = () => {
     const dispatch = useDispatch()
@@ -32,6 +33,11 @@ const EditView = () => {
             dispatch(removeAllSelectedNodes())
             return;
         }
+        dispatch(addNotification({
+            id: v4(),
+            error: true,
+            message: updatedData.error
+        }))
     }
 
     const handleBlockClick = async () => {

@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { setCarHistory } from "../../redux/historySlice";
 import { createLog } from "../../services/parkServices";
 import Constants from "../../constants/graphConstants";
+import { addNotification } from "../../redux/viewSlice";
+import { v4 } from "uuid";
 
 const ParkView = () => {
     const dispatch = useDispatch()
@@ -130,8 +132,19 @@ const ParkView = () => {
             dispatch(setAdjacencyList(updatedAdjacencyList))
             dispatch(setShortestPath([])) 
             setPlateNumberInput('')
+            dispatch(addNotification({
+                id: v4(),
+                error: false,
+                message: "Car was successfully parked!"
+            }))
             return;
         }
+        dispatch(addNotification({
+            id: v4(),
+            error: true,
+            message: logData.error
+
+        }))
     }
 
     useEffect(()=> {

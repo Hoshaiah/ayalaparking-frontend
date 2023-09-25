@@ -11,6 +11,9 @@ import Constants from './constants/graphConstants';
 import { getAllLogs } from './services/parkServices';
 import { setAllCarHistory } from './redux/historySlice';
 import { formatHistoryFromRequest } from './utils/parkingUtils';
+import NotificationsPane from './components/Notification/NotificationsPane';
+import { addNotification } from './redux/viewSlice';
+import { v4 } from 'uuid';
 
 function App() {
   const dispatch = useDispatch()
@@ -31,6 +34,12 @@ function App() {
               dispatch(setAdjacencyList(newAdjacencyList))
               dispatch(setAllNodeOccupancy({}))
             return;
+          } else {
+            dispatch(addNotification({
+              id: v4(),
+              error: true,
+              message: createdGraphData.error
+            }))
           }
         }
 
@@ -41,6 +50,12 @@ function App() {
             dispatch(setAdjacencyList(firstGraphData.data.adjacencyList))
             dispatch(setAllNodeOccupancy(firstGraphData.data.nodeOccupancy))
             return; 
+          } else {
+            dispatch(addNotification({
+              id: v4(),
+              error: true,
+              message: firstGraphData.error
+            }))
           }
         }
       }
@@ -69,6 +84,7 @@ function App() {
         <Graph />
         <HistoryPane/>
       </div>
+      <NotificationsPane/>
     </div>
   );
 }

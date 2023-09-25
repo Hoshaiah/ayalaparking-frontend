@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { v4 } from "uuid";
 
 const viewSlice = createSlice({
   name: "view",
   initialState: {
     currentView: 'editView',
     selectedNodes: [],
+    notifications: {},
   },
   reducers: {
     setCurrentView: (state, action) => {
@@ -22,8 +24,17 @@ const viewSlice = createSlice({
     removeAllSelectedNodes: (state, action) => {
         state.selectedNodes = []
     },
+    addNotification: (state, action) => {
+        state.notifications = {
+          ...state.notifications,
+            [v4()]: action.payload
+        }
+    },
+    removeNotification: (state, action) => {
+      delete state.notifications[action.payload]
+    }
   },
 });
 
-export const { setCurrentView, addToSelectedNodes, removeToSelectedNodes, removeAllSelectedNodes} = viewSlice.actions;
+export const { setCurrentView, addToSelectedNodes, removeToSelectedNodes, removeAllSelectedNodes, addNotification, removeNotification} = viewSlice.actions;
 export default viewSlice.reducer;
