@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/ayalaparking-frontend/static/css/main.3e620e9e.css",
-    "main.js": "/ayalaparking-frontend/static/js/main.1241369e.js",
+    "main.js": "/ayalaparking-frontend/static/js/main.9f17ea9b.js",
     "static/js/787.5506a13d.chunk.js": "/ayalaparking-frontend/static/js/787.5506a13d.chunk.js",
     "index.html": "/ayalaparking-frontend/index.html",
     "main.3e620e9e.css.map": "/ayalaparking-frontend/static/css/main.3e620e9e.css.map",
-    "main.1241369e.js.map": "/ayalaparking-frontend/static/js/main.1241369e.js.map",
+    "main.9f17ea9b.js.map": "/ayalaparking-frontend/static/js/main.9f17ea9b.js.map",
     "787.5506a13d.chunk.js.map": "/ayalaparking-frontend/static/js/787.5506a13d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3e620e9e.css",
-    "static/js/main.1241369e.js"
+    "static/js/main.9f17ea9b.js"
   ]
 }
