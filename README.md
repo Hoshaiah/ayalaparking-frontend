@@ -4,15 +4,15 @@
 
 ## Full Stack
 
-1. Launch the backend api. You can find it here: [https://github.com/Hoshaiah/ayala_parking](https://github.com/Hoshaiah/ayala_parking)
+1. Launch the backend api first. You can find it here: [https://github.com/Hoshaiah/ayala_parking](https://github.com/Hoshaiah/ayala_parking)
 
 2. Clone the repo
 ```bash
 git clone https://github.com/Hoshaiah/ayalaparking-frontend.git
 cd ayalaparking-frontend
 ```
-3. Change your server in based on the one that's being used for the backend api. 
-##### ./src/constants/graphConstants.js
+3. Change your server in based on the one that's being used for the backend api.  
+[./src/constants/graphConstants.js](https://github.com/Hoshaiah/ayalaparking-frontend/blob/main/src/constants/graphConstants.js)
 ```javascript
 const Constants = {
     server: 'http://127.0.0.1:3000'
