@@ -25,7 +25,8 @@ const EditView = () => {
 
     const updateNode = async (updatedAdjacencyList, options) => {
         const updatedNodeOccupancy = getUpdatedNodeOccupancy(graph.nodeOccupancy, options) 
-        const updatedData = await updateGraph(graph.adjacencyList, updatedNodeOccupancy, Constants.defaultGraphName)
+        const updatedData = await updateGraph(updatedAdjacencyList, updatedNodeOccupancy, Constants.defaultGraphName)
+
 
         if (updatedData.success){
             dispatch(setAllNodeOccupancy(updatedNodeOccupancy))
